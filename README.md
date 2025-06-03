@@ -1,5 +1,8 @@
 # CSC3107_TerrorismIndex_Visualization_Project
+
 Data visualization project for the Global Terrorism Index 2023. This repository contains code, visualizations, and analysis to explore and understand global terrorism trends using data from the Global Terrorism Index 2023 dataset.
+
+<p align='right'><sup><i>Last updated: 2025-06-03 10:32 UTC+8</i></sup></p>
 
 ## The Original Chart to Improve
 > SourceUrl: https://www.statista.com/chart/25540/world-terrorism-index/
