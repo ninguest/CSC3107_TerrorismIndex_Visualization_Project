@@ -64,3 +64,42 @@ ggplot(filtered_df, aes(x = Year, y = Score, color = Country)) +
         legend.title = element_text(face = "bold"))
 
 ```
+
+## GTI Score vs. Fatalities (2022) [Another Example]
+
+To assess how well the GTI score reflects actual impact, we visualized the relationship between the 2022 score and the number of fatalities from terrorist incidents.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Load 2022 data
+data_2022 <- read_excel("data/Global Terrorism Index 2023.xlsx", sheet = "2022")
+
+# Clean column names if necessary
+colnames(data_2022) <- make.names(colnames(data_2022))
+
+# Filter out missing values
+data_clean <- data_2022 %>%
+  filter(!is.na(Score) & !is.na(Fatalities))
+
+# Create scatter plot
+ggplot(data_clean, aes(x = Score, y = Fatalities, label = Country)) +
+  geom_point(color = "tomato", size = 3, alpha = 0.7) +
+  geom_text(size = 3, hjust = 1.1, check_overlap = TRUE) +
+  theme_minimal() +
+  labs(title = "GTI Score vs. Fatalities in 2022",
+       x = "GTI Score",
+       y = "Number of Fatalities",
+       caption = "Data source: Institute for Economics and Peace") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+
+```
+
+Insight:
+  
+- There is a general positive relationship between GTI Score and fatalities.
+  
+- Some countries have high scores but relatively fewer fatalities, suggesting score includes other risk factors (e.g., fear, threat perception, policy).
+
