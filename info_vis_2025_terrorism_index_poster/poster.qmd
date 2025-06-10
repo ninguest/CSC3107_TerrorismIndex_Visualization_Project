@@ -14,8 +14,11 @@ The original chart visualizing the Global Terrorism Index lacked clarity in term
 ![Original GTI Chart](data/Original Chart.jpeg)
 
 **Critique**:
+  
 - ❌ Hard to distinguish year-on-year trends
+  
 - ❌ Poor use of color gradients
+  
 - ✅ Includes core metrics: Score, Rank, etc.
 
 ## Data Preparation
@@ -37,7 +40,7 @@ long_df <- df %>%
   pivot_longer(cols = matches("^[0-9]{4} Score$"), names_to = "Year", values_to = "Score") %>%
   mutate(Year = as.integer(gsub(" Score", "", Year)))
 
-# Filter top 5 countries based on latest score
+# Filter top 15 countries based on latest score
 top15 <- df %>%
   select(Country, `2022 Score`) %>%
   arrange(desc(`2022 Score`)) %>%
@@ -47,8 +50,9 @@ top15 <- df %>%
 filtered_df <- long_df %>%
   filter(Country %in% top15)
 
+# Plot the data
 ggplot(filtered_df, aes(x = Year, y = Score, color = Country)) +
-  geom_line(size = 1.2) +
+  geom_line(linewidth = 1.2) +   # ← updated here
   geom_point() +
   theme_minimal() +
   labs(title = "Top 15 Countries by Terrorism Index Score (2012–2022)",
