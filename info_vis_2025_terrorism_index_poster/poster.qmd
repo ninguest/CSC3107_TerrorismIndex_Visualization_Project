@@ -11,15 +11,15 @@ The original chart visualizing the Global Terrorism Index lacked clarity in term
 
 ## Original Visualization
 
-![Original GTI Chart](data/Original Chart.jpeg)
+![Original GTI Chart](data/Original%20Chart.jpeg)
 
 **Critique**:
-  
-- ❌ Hard to distinguish year-on-year trends
-  
-- ❌ Poor use of color gradients
-  
-- ✅ Includes core metrics: Score, Rank, etc.
+
+-   ❌ Hard to distinguish year-on-year trends
+
+-   ❌ Poor use of color gradients
+
+-   ✅ Includes core metrics: Score, Rank, etc.
 
 ## Data Preparation
 
@@ -65,7 +65,159 @@ ggplot(filtered_df, aes(x = Year, y = Score, color = Country)) +
 
 ```
 
-## GTI Score vs. Fatalities (2022) [Another Example]
+```{r}
+# ─── Top-15 GTI Map with Discrete Country Legend ───
+
+#  Install any missing packages (once):
+# install.packages(c(
+#   "readxl","dplyr","tidyr","sf","rnaturalearth","ggplot2",
+#   "viridis","ggspatial","ggrepel","countrycode"
+# ))
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(sf)
+library(rnaturalearth)
+library(ggplot2)
+library(viridis)
+library(ggspatial)
+library(ggrepel)
+library(countrycode)
+library(grid)   # for unit()
+
+# 1. Load & reshape the GTI data
+df <- read_excel("data/Global Terrorism Index 2023.xlsx",
+                 sheet = "Overall Scores")
+
+long_df <- df %>%
+  pivot_longer(
+    cols      = matches("^[0-9]{4} Score$"),
+    names_to  = "Year",
+    values_to = "Score"
+  ) %>%
+  mutate(Year = as.integer(sub(" Score", "", Year)))
+
+# 2. Identify Top-15 countries by GTI in 2021
+top15_2021 <- long_df %>%
+  filter(Year == 2021) %>%
+  slice_max(Score, n = 15) %>%
+  pull(Country)
+
+# 3. Load world map & join scores for those Top-15, add continent
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+world_top15 <- world %>%
+  filter(name %in% top15_2021) %>%
+  left_join(
+    long_df %>% filter(Year == 2021) %>% select(Country, Score),
+    by = c("name" = "Country")
+  ) %>%
+  mutate(
+    continent = countrycode(name,
+                            origin      = "country.name",
+                            destination = "continent")
+  )
+
+# 4. Compute a tight bounding box + small buffer for zoom
+bb    <- st_bbox(world_top15)
+xbuf  <- (bb$xmax - bb$xmin) * 0.05
+ybuf  <- (bb$ymax - bb$ymin) * 0.05
+xlims <- c(bb$xmin - xbuf, bb$xmax + xbuf)
+ylims <- c(bb$ymin - ybuf, bb$ymax + ybuf)
+
+# 5. Build continent envelopes (convex hulls)
+hulls <- world_top15 %>%
+  group_by(continent) %>%
+  summarise(geometry = st_union(geometry), .groups = "drop") %>%
+  st_convex_hull()
+
+# 6. Label locations for those envelopes
+hull_centroids <- st_centroid(hulls)
+hull_labels <- hull_centroids %>%
+  st_coordinates() %>%
+  as_tibble() %>%
+  bind_cols(select(hulls, continent))
+
+# 7. Prepare discrete legend labels and palette
+world_top15 <- world_top15 %>%
+  arrange(continent, desc(Score)) %>%
+  mutate(
+    lbl = paste0(name, " (", round(Score,1), ")"),
+    lbl = factor(lbl, levels = unique(lbl))
+  )
+
+palette <- viridis::viridis(n = nrow(world_top15), option = "plasma")
+names(palette) <- levels(world_top15$lbl)
+
+# 8. Draw the map with discrete country legend
+ggplot() +
+  # a) all world in light grey
+  geom_sf(data = world,
+          fill  = "grey90",
+          color = "white",
+          size  = 0.1) +
+  
+  # b) highlight Top-15, fill by discrete label
+  geom_sf(data = world_top15,
+          aes(fill = lbl),
+          color = "white",
+          size  = 0.2) +
+  
+  # c) dashed continent envelopes
+  geom_sf(data = hulls,
+          fill      = NA,
+          color     = "black",
+          linetype  = "dashed",
+          size      = 0.5) +
+  
+  # d) continent labels
+  geom_text(data = hull_labels,
+            aes(X, Y, label = continent),
+            fontface = "bold",
+            size     = 4,
+            color    = "black") +
+  
+  # e) manual palette for discrete country labels
+  scale_fill_manual(
+    values = palette,
+    name   = "Country & Score",
+    guide  = guide_legend(
+      ncol        = 1,
+      byrow       = FALSE,
+      label.theme = element_text(size = 7)
+    )
+  ) +
+  
+  # f) zoom to hotspot region
+  coord_sf(xlim   = xlims,
+           ylim   = ylims,
+           expand = FALSE) +
+  
+  # g) scale bar
+  annotation_scale(location   = "bl",
+                   width_hint = 0.3) +
+  
+  # h) titles & caption
+  labs(
+    title    = "Terrorism Hotspots: Top-15 GTI Countries (2021)",
+    subtitle = "Grouped by continent (dashed), zoomed to the cluster",
+    caption  = "Source: Institute for Economics & Peace"
+  ) +
+  
+  # i) clean, map-only theme
+  theme_void(base_size = 14) +
+  theme(
+    plot.title      = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle   = element_text(hjust = 0.5),
+    plot.caption    = element_text(size = 8),
+    legend.position = "right"
+  )
+
+
+```
+
+## GTI Score vs. Fatalities (2022) \[Another Example\]
 
 To assess how well the GTI score reflects actual impact, we visualized the relationship between the 2022 score and the number of fatalities from terrorist incidents.
 
@@ -98,8 +250,7 @@ ggplot(data_clean, aes(x = Score, y = Fatalities, label = Country)) +
 ```
 
 Insight:
-  
-- There is a general positive relationship between GTI Score and fatalities.
-  
-- Some countries have high scores but relatively fewer fatalities, suggesting score includes other risk factors (e.g., fear, threat perception, policy).
 
+-   There is a general positive relationship between GTI Score and fatalities.
+
+-   Some countries have high scores but relatively fewer fatalities, suggesting score includes other risk factors (e.g., fear, threat perception, policy).
