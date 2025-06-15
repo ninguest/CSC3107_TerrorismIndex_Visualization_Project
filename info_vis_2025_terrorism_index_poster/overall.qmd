@@ -1,0 +1,242 @@
+---
+title: ""
+author: "`Tee Yu Cheng`, `Lim Jing Chuan Jonathan`"
+format: html
+editor: visual
+---
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Load the data
+df <- read_excel("data/Global Terrorism Index 2023.xlsx", sheet = "Overall Scores")
+
+# Convert to long format
+long_df <- df %>%
+  pivot_longer(cols = matches("^[0-9]{4} Score$"), names_to = "Year", values_to = "Score") %>%
+  mutate(Year = as.integer(gsub(" Score", "", Year)))
+
+# Filter top 15 countries based on latest score
+top15 <- df %>%
+  select(Country, `2022 Score`) %>%
+  arrange(desc(`2022 Score`)) %>%
+  slice(1:15) %>%
+  pull(Country)
+
+filtered_df <- long_df %>%
+  filter(Country %in% top15)
+```
+
+```{r}
+# Plot the data
+ggplot(filtered_df, aes(x = Year, y = Score, color = Country)) +
+  geom_line(linewidth = 1.2) +   # ← updated here
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Top 15 Countries by Terrorism Index Score (2012–2022)",
+       y = "GTI Score",
+       x = "Year",
+       color = "Country") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
+        legend.position = "bottom",
+        legend.title = element_text(face = "bold"))
+
+```
+
+```{r fig.cap="Terrorism Index Trends by Country (2012–2022), with Severity Levels", fig.width=12, fig.height=8}
+library(ggplot2)
+library(dplyr)
+
+ggplot(filtered_df, aes(x = Year, y = Score)) +
+  # Severity background bands (more visible)
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 8, ymax = 10,
+           fill = "#B22222", alpha = 0.15) +
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 6, ymax = 8,
+           fill = "#FF8C00", alpha = 0.15) +
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 4, ymax = 6,
+           fill = "#FFD700", alpha = 0.15) +
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 0, ymax = 4,
+           fill = "#90EE90", alpha = 0.15) +
+  
+  # Add labels to indicate severity zones
+  annotate("text", x = 2013, y = 9, label = "Severe", color = "#8B0000", size = 4, fontface = "bold") +
+  annotate("text", x = 2013, y = 7, label = "High", color = "#FF8C00", size = 4, fontface = "bold") +
+  annotate("text", x = 2013, y = 5, label = "Moderate", color = "#DAA520", size = 4, fontface = "bold") +
+  annotate("text", x = 2013, y = 2, label = "Low", color = "#228B22", size = 4, fontface = "bold") +
+
+  # Main line chart
+  geom_line(color = "#000000", linewidth = 1.2) +
+  geom_point(color = "#000000", size = 1.2) +
+  
+  # Faceted by country
+  facet_wrap(~Country, ncol = 5) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Terrorism Index Trends by Country (2012–2022)",
+    subtitle = "GTI Scores Categorized by Severity Levels",
+    x = "Year",
+    y = "GTI Score (0–10)\nHigher = More Impact from Terrorism"
+  ) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 13, hjust = 0.5),
+    strip.text = element_text(size = 11, face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+```{r}
+# ─── Top-15 GTI Map with Discrete Country Legend ───
+
+#  Install any missing packages (once):
+# install.packages(c(
+#   "readxl","dplyr","tidyr","sf","rnaturalearth","ggplot2",
+#   "viridis","ggspatial","ggrepel","countrycode"
+# ))
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(sf)
+library(rnaturalearth)
+library(ggplot2)
+library(viridis)
+library(ggspatial)
+library(ggrepel)
+library(countrycode)
+library(grid)   # for unit()
+
+# 1. Load & reshape the GTI data
+df <- read_excel("data/Global Terrorism Index 2023.xlsx",
+                 sheet = "Overall Scores")
+
+long_df <- df %>%
+  pivot_longer(
+    cols      = matches("^[0-9]{4} Score$"),
+    names_to  = "Year",
+    values_to = "Score"
+  ) %>%
+  mutate(Year = as.integer(sub(" Score", "", Year)))
+
+# 2. Identify Top-15 countries by GTI in 2021
+top15_2021 <- long_df %>%
+  filter(Year == 2021) %>%
+  slice_max(Score, n = 15) %>%
+  pull(Country)
+
+# 3. Load world map & join scores for those Top-15, add continent
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+world_top15 <- world %>%
+  filter(name %in% top15_2021) %>%
+  left_join(
+    long_df %>% filter(Year == 2021) %>% select(Country, Score),
+    by = c("name" = "Country")
+  ) %>%
+  mutate(
+    continent = countrycode(name,
+                            origin      = "country.name",
+                            destination = "continent")
+  )
+
+# 4. Compute a tight bounding box + small buffer for zoom
+bb    <- st_bbox(world_top15)
+xbuf  <- (bb$xmax - bb$xmin) * 0.05
+ybuf  <- (bb$ymax - bb$ymin) * 0.05
+xlims <- c(bb$xmin - xbuf, bb$xmax + xbuf)
+ylims <- c(bb$ymin - ybuf, bb$ymax + ybuf)
+
+# 5. Build continent envelopes (convex hulls)
+hulls <- world_top15 %>%
+  group_by(continent) %>%
+  summarise(geometry = st_union(geometry), .groups = "drop") %>%
+  st_convex_hull()
+
+# 6. Label locations for those envelopes
+hull_centroids <- st_centroid(hulls)
+hull_labels <- hull_centroids %>%
+  st_coordinates() %>%
+  as_tibble() %>%
+  bind_cols(select(hulls, continent))
+
+# 7. Prepare discrete legend labels and palette
+world_top15 <- world_top15 %>%
+  arrange(continent, desc(Score)) %>%
+  mutate(
+    lbl = paste0(name, " (", round(Score,1), ")"),
+    lbl = factor(lbl, levels = unique(lbl))
+  )
+
+palette <- viridis::viridis(n = nrow(world_top15), option = "plasma")
+names(palette) <- levels(world_top15$lbl)
+
+# 8. Draw the map with discrete country legend
+ggplot() +
+  # a) all world in light grey
+  geom_sf(data = world,
+          fill  = "grey90",
+          color = "white",
+          size  = 0.1) +
+  
+  # b) highlight Top-15, fill by discrete label
+  geom_sf(data = world_top15,
+          aes(fill = lbl),
+          color = "white",
+          size  = 0.2) +
+  
+  # c) dashed continent envelopes
+  geom_sf(data = hulls,
+          fill      = NA,
+          color     = "black",
+          linetype  = "dashed",
+          size      = 0.5) +
+  
+  # d) continent labels
+  geom_text(data = hull_labels,
+            aes(X, Y, label = continent),
+            fontface = "bold",
+            size     = 4,
+            color    = "black") +
+  
+  # e) manual palette for discrete country labels
+  scale_fill_manual(
+    values = palette,
+    name   = "Country & Score",
+    guide  = guide_legend(
+      ncol        = 1,
+      byrow       = FALSE,
+      label.theme = element_text(size = 7)
+    )
+  ) +
+  
+  # f) zoom to hotspot region
+  coord_sf(xlim   = xlims,
+           ylim   = ylims,
+           expand = FALSE) +
+  
+  # g) scale bar
+  annotation_scale(location   = "bl",
+                   width_hint = 0.3) +
+  
+  # h) titles & caption
+  labs(
+    title    = "Terrorism Hotspots: Top-15 GTI Countries (2021)",
+    subtitle = "Grouped by continent (dashed), zoomed to the cluster",
+    caption  = "Source: Institute for Economics & Peace"
+  ) +
+  
+  # i) clean, map-only theme
+  theme_void(base_size = 14) +
+  theme(
+    plot.title      = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle   = element_text(hjust = 0.5),
+    plot.caption    = element_text(size = 8),
+    legend.position = "right"
+  )
+
+```

@@ -5,17 +5,17 @@ format: html
 editor: visual
 ---
 
-## Introduction
+# Introduction
 
 The original chart visualizing the Global Terrorism Index lacked clarity in terms of trends and country comparisons across time. Our objective is to improve interpretability while preserving the integrity of the data.
 
-## Original Visualization
+# Original Visualization
 
 ![Original GTI Chart](data/Original%20Chart.jpeg)
 
-## Comparison Table: Strengths vs. Areas for Improvement
+## Critical Evaluation of Original Visualization
 
-### What Works Well ✅
+#### What Works Well ✅
 
 -   **Clear Title and Subtitle:** "The World's Terrorism Hotspots" effectively communicates purpose; subtitle explains GTI basis
 -   **Effective Chart Type:** Bar chart efficiently compares values across countries
@@ -24,7 +24,7 @@ The original chart visualizing the Global Terrorism Index lacked clarity in term
 -   **Precise Data Display:** Numeric scores clearly labeled on each bar for accurate comparison
 -   **Proper Attribution:** Correctly cites "Institute for Economics and Peace" with methodology explanation
 
-### What Could Be Improved ❌
+#### What Could Be Improved ❌
 
 -   **Missing Geographic Context:** No map or regional grouping to show concentration in Africa/Middle East
 -   **Limited Color Accessibility:** Dark maroon with white text may reduce legibility for some viewers
@@ -33,9 +33,12 @@ The original chart visualizing the Global Terrorism Index lacked clarity in term
 -   **Absent Temporal Context:** No visualization of trends over time despite 5-year data availability
 -   **Unclear Score Interpretation:** Lacks scale context to help viewers understand meaning of scores
 
-## Data Preparation
+# Our Improved Visualizations
 
-We used the *Global Terrorism Index 2023.xlsx* file from the Institute for Economics and Peace. The `Overall Scores` sheet was selected due to its completeness and structured format.
+## Data Preparation and Processing
+
+> We used the *Global Terrorism Index 2023.xlsx* file from the Institute for Economics and Peace. 
+> The `Overall Scores` sheet was selected due to its completeness and structured format.
 
 ```{r}
 
@@ -46,7 +49,17 @@ library(ggplot2)
 
 # Load the data
 df <- read_excel("data/Global Terrorism Index 2023.xlsx", sheet = "Overall Scores")
+```
 
+---
+
+#### Transforming Data for Analysis
+
+> We reshapes a data frame (df) containing country scores by year into a long format, making each row represent a country-year-score combination. 
+> It then identifies the top 15 countries based on their 2022 scores and filters the long-format data to include only these countries. 
+> This prepares the data for focused analysis or visualization of the top performers over time.
+
+```{r} 
 # Convert to long format
 long_df <- df %>%
   pivot_longer(cols = matches("^[0-9]{4} Score$"), names_to = "Year", values_to = "Score") %>%
@@ -61,21 +74,14 @@ top15 <- df %>%
 
 filtered_df <- long_df %>%
   filter(Country %in% top15)
-
-# Plot the data
-ggplot(filtered_df, aes(x = Year, y = Score, color = Country)) +
-  geom_line(linewidth = 1.2) +   # ← updated here
-  geom_point() +
-  theme_minimal() +
-  labs(title = "Top 15 Countries by Terrorism Index Score (2012–2022)",
-       y = "GTI Score",
-       x = "Year",
-       color = "Country") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-        legend.position = "bottom",
-        legend.title = element_text(face = "bold"))
-
 ```
+
+---
+
+# Visualization : Trend Analysis with Severity Classification
+
+> This visualization addresses the original chart's lack of temporal context by showing how terrorism impacts have changed over a decade (2012-2022). 
+> We've added color-coded severity bands to provide clear context for score interpretation.
 
 ```{r fig.cap="Terrorism Index Trends by Country (2012–2022), with Severity Levels", fig.width=12, fig.height=8}
 library(ggplot2)
@@ -121,27 +127,15 @@ ggplot(filtered_df, aes(x = Year, y = Score)) +
 
 ```
 
-```{r}
-# ─── Top-15 GTI Map with Discrete Country Legend ───
+#### Key Insights from Trend Analysis:
 
-#  Install any missing packages (once):
-# install.packages(c(
-#   "readxl","dplyr","tidyr","sf","rnaturalearth","ggplot2",
-#   "viridis","ggspatial","ggrepel","countrycode"
-# ))
+- Afghanistan, Iraq, and Syria show consistently high terrorism impacts over the decade
+- Several countries show declining trends (Iraq, Nigeria) while others show recent increases (Burkina Faso)
+- The color-coded severity bands provide immediate context for interpreting the GTI scores
 
-library(readxl)
-library(dplyr)
-library(tidyr)
-library(sf)
-library(rnaturalearth)
-library(ggplot2)
-library(viridis)
-library(ggspatial)
-library(ggrepel)
-library(countrycode)
-library(grid)   # for unit()
+# Conclusion and Impact
 
+<<<<<<< Updated upstream
 # 1. Load & reshape the GTI data
 df <- read_excel("data/Global Terrorism Index 2023.xlsx",
                  sheet = "Overall Scores")
@@ -304,3 +298,11 @@ Insight:
 -   There is a general positive relationship between GTI Score and fatalities.
 
 -   Some countries have high scores but relatively fewer fatalities, suggesting score includes other risk factors (e.g., fear, threat perception, policy).
+=======
+Our improved visualizations address the key shortcomings of the original chart:
+
+1. Added Temporal Context: We now show trends over 10 years instead of a static snapshot
+2. Improved Score Interpretation: Color-coded severity bands make it easier to understand what the scores mean
+3. Enhanced Visual Neutrality: Removed potentially biased imagery while maintaining clarity
+4. Better Accessibility: Improved color contrasts and clear labeling
+>>>>>>> Stashed changes
