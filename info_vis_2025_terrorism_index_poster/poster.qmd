@@ -15,14 +15,23 @@ The original chart visualizing the Global Terrorism Index lacked clarity in term
 
 ## Comparison Table: Strengths vs. Areas for Improvement
 
-| ✅ What Works Well | ❌ What Could Be Improved |
-|-----------------------------|-------------------------------------------|
-| **Title and Subtitle:** "The World's Terrorism Hotspots" clearly communicates purpose; subtitle explains GTI basis | **Geographic Context:** No map or regional grouping to show concentration in Africa/Middle East |
-| **Chart Type:** Bar chart effectively compares values across countries | **Color Accessibility:** Dark maroon with white text may reduce legibility for some viewers |
-| **Color Usage:** Consistent deep red reinforces severity theme appropriate to topic | **Interactivity:** Static image prevents exploration of additional data dimensions |
-| **Country Identification:** Flags help users quickly identify nations without reading all names | **Visual Neutrality:** Background imagery (dove in crosshair) potentially adds emotional bias |
-| **Score Display:** Numeric scores clearly labeled on each bar for precise comparison | **Temporal Context:** No visualization of trends over time despite 5-year data availability |
-| **Source Citation:** Properly cites "Institute for Economics and Peace" with methodology explanation | **Score Interpretation:** Lacks scale context to help viewers understand meaning of scores |
+### What Works Well ✅
+
+- **Clear Title and Subtitle:** "The World's Terrorism Hotspots" effectively communicates purpose; subtitle explains GTI basis
+- **Effective Chart Type:** Bar chart efficiently compares values across countries
+- **Appropriate Color Theme:** Consistent deep red reinforces severity theme suitable for the topic
+- **Enhanced Country Identification:** Flags help users quickly identify nations without reading all names
+- **Precise Data Display:** Numeric scores clearly labeled on each bar for accurate comparison
+- **Proper Attribution:** Correctly cites "Institute for Economics and Peace" with methodology explanation
+
+### What Could Be Improved ❌
+
+- **Missing Geographic Context:** No map or regional grouping to show concentration in Africa/Middle East
+- **Limited Color Accessibility:** Dark maroon with white text may reduce legibility for some viewers
+- **Lack of Interactivity:** Static image prevents exploration of additional data dimensions
+- **Potential Visual Bias:** Background imagery (dove in crosshair) potentially adds emotional bias
+- **Absent Temporal Context:** No visualization of trends over time despite 5-year data availability
+- **Unclear Score Interpretation:** Lacks scale context to help viewers understand meaning of scores
 
 ## Data Preparation
 
