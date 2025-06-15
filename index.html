@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Terrorism Index Visualization Project</title>
+    <style>
+        :root {
+            --primary: #3772ff;
+            --secondary: #f13c20;
+            --light: #f8f9fa;
+            --dark: #2a2d34;
+            --accent: #6a0572;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+        }
+        
+        .visualization {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .visualization img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .comparison {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+        
+        .comparison-item img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .cta {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .cta h2 {
+            margin-top: 0;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+            background-color: #f8f9fa;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .highlight {
+            background-color: rgba(55, 114, 255, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Improving the Global Terrorism Index Visualization</h1>
+        <p class="subtitle">A data visualization project by Coral Team</p>
+    </header>
+    
+    <div class="container">
+        <div class="highlight">
+            <p><strong>Project Overview:</strong> Explore our innovative approach to visualizing global terrorism data. For interactive visualizations, <a href="/qr/" class="button">Click Here</a></p>
+        </div>
+        
+        <section>
+            <h2>Project Overview</h2>
+            <p>
+                The Global Terrorism Index (GTI) provides critical data on terrorism trends worldwide. Our project enhances the visualization of this data to improve interpretability while preserving data integrity. Through better visualization techniques, we enable clearer understanding of terrorism patterns across countries and time periods.
+            </p>
+        </section>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>Original Visualization Challenges</h2>
+                <ul>
+                    <li>❌ Difficult to distinguish year-on-year trends</li>
+                    <li>❌ Poor use of color gradients</li>
+                    <li>❌ Limited contextual information</li>
+                    <li>✅ Included core metrics (Score, Rank, etc.)</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Our Improvements</h2>
+                <ul>
+                    <li>✅ Clear temporal trends visualization (2012-2022)</li>
+                    <li>✅ Discrete color coding by country</li>
+                    <li>✅ Geographic clustering by continent</li>
+                    <li>✅ Correlation analysis of GTI scores and fatalities</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="visualization">
+            <h2>Original GTI Visualization</h2>
+            <img src="Data/Original Chart.jpeg" alt="Original GTI Chart">
+        </div>
+        
+        <section class="cta">
+            <h2>Explore Our Enhanced Visualizations</h2>
+            <p>Our interactive poster showcases three improved visualization approaches that make the terrorism data more accessible and meaningful.</p>
+            <a href="/qr/" class="button">View Interactive Visualizations</a>
+        </section>
+        
+        <section>
+            <h2>Key Insights</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Temporal Patterns</h3>
+                    <p>Afghanistan, Iraq, and Syria consistently ranked among the highest GTI scores over the decade, with visible trends showing shifts in terrorism hotspots.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Geographic Clustering</h3>
+                    <p>Clear continental clustering of terrorism activity, with significant hotspots in the Middle East and parts of Africa.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Score vs. Impact</h3>
+                    <p>While GTI scores generally correlate with fatalities, some countries have high scores despite fewer deaths, suggesting the index incorporates other risk factors.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Data-Driven Insights</h3>
+                    <p>Our visualization reveals patterns that were obscured in the original presentation, enabling better-informed security and policy decisions.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>© 2025 Coral Team | CSC3107 Terrorism Index Visualization Project</p>
+        <p><a href="/qr/" style="color: white; text-decoration: underline;">Interactive Visualizations</a></p>
+    </footer>
+</body>
+</html>
