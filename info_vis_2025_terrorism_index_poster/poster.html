@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -64,10 +64,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="poster_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="poster_files/libs/quarto-html/anchor.min.js"></script>
 <link href="poster_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="poster_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="poster_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="poster_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="poster_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="poster_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="poster_files/libs/bootstrap/bootstrap-1bc8a17f135ab3d594c857e9f48e611b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -115,12 +115,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption>Original GTI Chart</figcaption>
 </figure>
 </div>
-<p><strong>Critique</strong>:</p>
-<ul>
-<li><p>❌ Hard to distinguish year-on-year trends</p></li>
-<li><p>❌ Poor use of color gradients</p></li>
-<li><p>✅ Includes core metrics: Score, Rank, etc.</p></li>
-</ul>
+</section>
+<section id="comparison-table-strengths-vs.-areas-for-improvement" class="level2">
+<h2 class="anchored" data-anchor-id="comparison-table-strengths-vs.-areas-for-improvement">Comparison Table: Strengths vs.&nbsp;Areas for Improvement</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 59%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>✅ What Works Well</th>
+<th>❌ What Could Be Improved</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Title and Subtitle:</strong> “The World’s Terrorism Hotspots” clearly communicates purpose; subtitle explains GTI basis</td>
+<td><strong>Geographic Context:</strong> No map or regional grouping to show concentration in Africa/Middle East</td>
+</tr>
+<tr class="even">
+<td><strong>Chart Type:</strong> Bar chart effectively compares values across countries</td>
+<td><strong>Color Accessibility:</strong> Dark maroon with white text may reduce legibility for some viewers</td>
+</tr>
+<tr class="odd">
+<td><strong>Color Usage:</strong> Consistent deep red reinforces severity theme appropriate to topic</td>
+<td><strong>Interactivity:</strong> Static image prevents exploration of additional data dimensions</td>
+</tr>
+<tr class="even">
+<td><strong>Country Identification:</strong> Flags help users quickly identify nations without reading all names</td>
+<td><strong>Visual Neutrality:</strong> Background imagery (dove in crosshair) potentially adds emotional bias</td>
+</tr>
+<tr class="odd">
+<td><strong>Score Display:</strong> Numeric scores clearly labeled on each bar for precise comparison</td>
+<td><strong>Temporal Context:</strong> No visualization of trends over time despite 5-year data availability</td>
+</tr>
+<tr class="even">
+<td><strong>Source Citation:</strong> Properly cites “Institute for Economics and Peace” with methodology explanation</td>
+<td><strong>Score Interpretation:</strong> Lacks scale context to help viewers understand meaning of scores</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="data-preparation" class="level2">
 <h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
@@ -479,8 +514,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -591,7 +624,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

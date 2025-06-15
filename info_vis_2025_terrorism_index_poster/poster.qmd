@@ -13,13 +13,16 @@ The original chart visualizing the Global Terrorism Index lacked clarity in term
 
 ![Original GTI Chart](data/Original%20Chart.jpeg)
 
-**Critique**:
+## Comparison Table: Strengths vs. Areas for Improvement
 
--   ❌ Hard to distinguish year-on-year trends
-
--   ❌ Poor use of color gradients
-
--   ✅ Includes core metrics: Score, Rank, etc.
+| ✅ What Works Well | ❌ What Could Be Improved |
+|-------------------|----------------------------|
+| **Title and Subtitle:** "The World's Terrorism Hotspots" clearly communicates purpose; subtitle explains GTI basis | **Geographic Context:** No map or regional grouping to show concentration in Africa/Middle East |
+| **Chart Type:** Bar chart effectively compares values across countries | **Color Accessibility:** Dark maroon with white text may reduce legibility for some viewers |
+| **Color Usage:** Consistent deep red reinforces severity theme appropriate to topic | **Interactivity:** Static image prevents exploration of additional data dimensions |
+| **Country Identification:** Flags help users quickly identify nations without reading all names | **Visual Neutrality:** Background imagery (dove in crosshair) potentially adds emotional bias |
+| **Score Display:** Numeric scores clearly labeled on each bar for precise comparison | **Temporal Context:** No visualization of trends over time despite 5-year data availability |
+| **Source Citation:** Properly cites "Institute for Economics and Peace" with methodology explanation | **Score Interpretation:** Lacks scale context to help viewers understand meaning of scores |
 
 ## Data Preparation
 
