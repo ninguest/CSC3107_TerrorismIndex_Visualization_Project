@@ -49,12 +49,12 @@ h1, h2, h3, h4 {
 # 2021 Details
 
 ```{r}
-# ─── Top-15 GTI Map with Discrete Country Legend ───
+# ─── Full script: Top-15 GTI Map with Oversized, Crisp QR Code ───
 
-#  Install any missing packages (once):
+# 0. Install missing packages if needed:
 # install.packages(c(
 #   "readxl","dplyr","tidyr","sf","rnaturalearth","ggplot2",
-#   "viridis","ggspatial","ggrepel","countrycode"
+#   "viridis","ggspatial","ggrepel","countrycode","qrcode"
 # ))
 
 library(readxl)
@@ -67,18 +67,19 @@ library(viridis)
 library(ggspatial)
 library(ggrepel)
 library(countrycode)
-library(grid)   # for unit()
+library(qrcode)
+library(grid)   # for unit() & rasterGrob()
 
 # 1. Load & reshape the GTI data
 df <- read_excel("data/Global Terrorism Index 2023.xlsx",
                  sheet = "Overall Scores")
 long_df <- df %>%
   pivot_longer(
-    cols      = matches("^[0-9]{4} Score$"),
-    names_to  = "Year",
-    values_to = "Score"
+    cols     = matches("^[0-9]{4} Score$"),
+    names_to = "Year",
+    values_to= "Score"
   ) %>%
-  mutate(Year = as.integer(sub(" Score", "", Year)))
+  mutate(Year = as.integer(sub(" Score","", Year)))
 
 # 2. Identify Top-15 countries by GTI in 2021
 top15_2021 <- long_df %>%
@@ -87,110 +88,92 @@ top15_2021 <- long_df %>%
   pull(Country)
 
 # 3. Load world map & join scores for those Top-15, add continent
-world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- ne_countries(scale="medium", returnclass="sf")
 world_top15 <- world %>%
   filter(name %in% top15_2021) %>%
   left_join(
-    long_df %>% filter(Year == 2021) %>% select(Country, Score),
-    by = c("name" = "Country")
+    long_df %>% filter(Year==2021) %>% select(Country,Score),
+    by = c("name"="Country")
   ) %>%
-  mutate(continent = countrycode(name,
-                                 origin      = "country.name",
-                                 destination = "continent"))
+  mutate(continent = countrycode(name,"country.name","continent"))
 
-# 4. Compute bounding box + small buffer for zoom
+# 4. Compute bounding box + small buffer (5%)
 bb    <- st_bbox(world_top15)
 xbuf  <- (bb$xmax - bb$xmin) * 0.05
 ybuf  <- (bb$ymax - bb$ymin) * 0.05
 xlims <- c(bb$xmin - xbuf, bb$xmax + xbuf)
 ylims <- c(bb$ymin - ybuf, bb$ymax + ybuf)
 
-# 5. Build continent envelopes (convex hulls)
+# 5. Build continent envelopes
 hulls <- world_top15 %>%
   group_by(continent) %>%
-  summarise(geometry = st_union(geometry), .groups = "drop") %>%
+  summarise(geometry=st_union(geometry), .groups="drop") %>%
   st_convex_hull()
 
-# 6. Label locations for those envelopes (geometry-only centroids)
+# 6. Compute envelope centroids for labels
 hull_centroids <- st_centroid(st_geometry(hulls))
 hull_labels <- as_tibble(st_coordinates(hull_centroids)) %>%
   bind_cols(select(hulls, continent))
 
-# 7. Prepare discrete legend labels ordered by descending Score
+# 7. Prepare legend labels & palette
 world_top15 <- world_top15 %>%
   arrange(desc(Score)) %>%
   mutate(
-    lbl = paste0(name, " (", round(Score,1), ")"),
-    lbl = factor(lbl, levels = unique(lbl))
+    lbl = factor(paste0(name," (",round(Score,1),")"),
+                 levels=unique(paste0(name," (",round(Score,1),")")))
   )
+pal <- viridis(nrow(world_top15), option="plasma")
+names(pal) <- levels(world_top15$lbl)
 
-# 8. Generate a palette so that highest-score is darkest
-n       <- nrow(world_top15)
-palette <- viridis(n, option = "plasma")  # dark purple → yellow
-names(palette) <- levels(world_top15$lbl)
+# 8. Generate a large, non‐interpolated QR code
+qr_mat    <- qr_code("https://github.com/yourusername/yourrepo")
+qr_raster <- as.raster(ifelse(qr_mat, "black","white"))
+qr_grob   <- rasterGrob(
+  qr_raster,
+  x           = unit(0.85,"npc"),
+  y           = unit(0.15,"npc"),
+  width       = unit(0.25,"npc"),
+  height      = unit(0.25,"npc"),
+  interpolate = FALSE
+)
 
-# 9. Draw the map
+# 9. Draw the map with embedded QR code
 ggplot() +
-  # a) world background
-  geom_sf(data = world,
-          fill  = "grey90",
-          color = "white",
-          size  = 0.1) +
-  # b) highlight Top-15, fill by discrete label
-  geom_sf(data = world_top15,
-          aes(fill = lbl),
-          color = "white",
-          size  = 0.2) +
-  # c) dashed continent envelopes
-  geom_sf(data     = hulls,
-          fill     = NA,
-          color    = "black",
-          linetype = "dashed",
-          size     = 0.5) +
-  # d) continent labels
-  geom_text(data = hull_labels,
-            aes(X, Y, label = continent),
-            fontface = "bold",
-            size     = 3.5) +
-  # e) discrete fill scale ordered by descending Score
-  scale_fill_manual(
-    values = palette,
-    name   = "Country (GTI Score 2021)",
-    guide  = guide_legend(
-      ncol        = 1,
-      byrow       = FALSE,
-      keywidth    = unit(0.4, "cm"),
-      keyheight   = unit(0.3, "cm"),
-      label.theme = element_text(size = 6)
-    )
-  ) +
-  # f) zoom to hotspot region
-  coord_sf(xlim   = xlims,
-           ylim   = ylims,
-           expand = FALSE) +
-  # g) scale bar
-  annotation_scale(location   = "bl",
-                   width_hint = 0.2,
-                   pad_x      = unit(0.5, "cm"),
-                   pad_y      = unit(0.5, "cm")) +
-  # h) titles & caption
+  geom_sf(data=world, fill="grey90", color="white", size=0.1) +
+  geom_sf(data=world_top15,
+          aes(fill=lbl), color="white", size=0.2) +
+  geom_sf(data=hulls, fill=NA,
+          color="black", linetype="dashed", size=0.5) +
+  geom_text(data=hull_labels,
+            aes(X, Y, label=continent),
+            fontface="bold", size=3.5) +
+  scale_fill_manual(values=pal,
+                    name="Country (GTI Score 2021)",
+                    guide=guide_legend(
+                      keywidth=unit(0.4,"cm"),
+                      keyheight=unit(0.3,"cm"),
+                      label.theme=element_text(size=6)
+                    )) +
+  coord_sf(xlim=xlims, ylim=ylims, expand=FALSE) +
+  annotation_scale(location="bl", width_hint=0.2,
+                   pad_x=unit(0.5,"cm"), pad_y=unit(0.5,"cm")) +
   labs(
-    title    = "Terrorism Hotspots: Top-15 GTI Countries (2021)",
-    subtitle = "Darkness reflects descending GTI score; dashed = continental groups",
-    caption  = "Source: Institute for Economics & Peace"
+    title   = "Terrorism Hotspots: Top-15 GTI Countries (2021)",
+    subtitle= "Darkness reflects descending GTI score; dashed = continental groups",
+    caption = "Source: Institute for Economics & Peace"
   ) +
-  # i) clean theme + margins + legend sizing
-  theme_void(base_size = 14) +
+  annotation_custom(qr_grob) +
+  theme_void(base_size=14) +
   theme(
-    plot.title         = element_text(face = "bold", hjust = 0.5, size = 16, margin = margin(b = 4)),
-    plot.subtitle      = element_text(hjust = 0.5, size = 10, margin = margin(b = 8)),
-    plot.caption       = element_text(size = 8, margin = margin(t = 8)),
-    plot.margin        = margin(t = 20, r = 20, b = 20, l = 20),
-    legend.position    = "right",
-    legend.key         = element_rect(fill = "white", color = NA),
-    legend.background  = element_rect(fill = "white", color = NA),
-    legend.title       = element_text(size = 9, face = "bold"),
-    legend.text        = element_text(size = 6)
+    plot.title      = element_text(face="bold", hjust=0.5, size=16),
+    plot.subtitle   = element_text(hjust=0.5, size=10),
+    plot.caption    = element_text(size=8, margin=margin(t=8)),
+    plot.margin     = margin(20,20,20,20),
+    legend.position = "right",
+    legend.key      = element_rect(fill="white", color=NA),
+    legend.background = element_rect(fill="white", color=NA),
+    legend.title    = element_text(size=9, face="bold"),
+    legend.text     = element_text(size=6)
   )
 ```
 
@@ -295,7 +278,6 @@ leaflet(world_top15) %>%
     position = "bottomleft"
   )
 ```
-
 
 # Introduction {.section-header}
 
