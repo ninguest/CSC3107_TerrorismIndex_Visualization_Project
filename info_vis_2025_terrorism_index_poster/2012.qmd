@@ -171,7 +171,7 @@ ggplot(top15, aes(x = Country, y = Score)) +
 ## Top 15 Countries by Total Fatalities {.section-header}
 
 ::: description-box
-This visualization shows the countries with the highest number of terrorism-related fatalities over the 2012-2022 period. The number of fatalities is a direct measure of the human cost of terrorism.
+This visualization shows the countries with the highest number of terrorism-related fatalities in 2012. The number of fatalities is a direct measure of the human cost of terrorism.
 :::
 
 ```{r}
