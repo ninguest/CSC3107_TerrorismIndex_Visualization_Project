@@ -126,7 +126,7 @@ pal <- viridis(nrow(world_top15), option="plasma")
 names(pal) <- levels(world_top15$lbl)
 
 # 8. Generate a large, non‐interpolated QR code
-qr_mat    <- qr_code("https://github.com/yourusername/yourrepo")
+qr_mat    <- qr_code("https://jonathanljc.github.io/gtsinteractive/")
 qr_raster <- as.raster(ifelse(qr_mat, "black","white"))
 qr_grob   <- rasterGrob(
   qr_raster,
