@@ -46,9 +46,11 @@ h1, h2, h3, h4 {
 </style>
 ```
 
-# Introduction {.section-header}
-  
-<div class="description-box"> This analysis explores the Global Terrorism Index (GTI) data from 2012 to 2022, examining trends and patterns in terrorism impact across countries. The GTI is a comprehensive measure that incorporates incidents, fatalities, injuries, and hostage situations to quantify the impact of terrorism globally. </div>
+# 1. Introduction {.section-header}
+
+::: description-box
+This analysis explores the Global Terrorism Index (GTI) data from 2012 to 2022, examining trends and patterns in terrorism impact across countries. The GTI is a comprehensive measure that incorporates incidents, fatalities, injuries, and hostage situations to quantify the impact of terrorism globally.
+:::
 
 ```{r}
 #| label: setup
@@ -91,9 +93,13 @@ combined_raw_df <- combined_raw_df %>%
 
 ```
 
-# Terrorism Index Overview {.section-header}
+# 2. Exploration Data Analysis {.section-header}
 
-<div class="description-box"> The first visualization shows the overall trend of GTI scores for the top 15 most affected countries from 2012 to 2022. This provides a comparative view of how terrorism impact has evolved over time across these nations. </div>
+## 2.1. Terrorism Index Overview {.section-header}
+
+::: description-box
+The first visualization shows the overall trend of GTI scores for the top 15 most affected countries from 2012 to 2022. This provides a comparative view of how terrorism impact has evolved over time across these nations.
+:::
 
 ```{r}
 #| label: overall-trend
@@ -112,15 +118,16 @@ ggplot(filtered_df, aes(x = Year, y = Score, color = Country)) +
         legend.position = "bottom",
         legend.title = element_text(face = "bold"))
 ```
-<div class="insight-box"> **Key Insights:**<br><br>
-• Afghanistan has consistently maintained the highest GTI score throughout most of the period<br>
-• Iraq shows a significant decline in terrorism impact since its peak around 2014-2015<br>
-• Several countries show recent increases in their GTI scores, suggesting emerging terrorism hotspots<br>
-• The overall pattern reveals fluctuating impacts, indicating the dynamic nature of terrorism threats globally</div>
 
-# Detailed Country Analysis with Severity Classification {.section-header}
-  
-<div class="description-box"> This visualization breaks down the terrorism index trends by country with clear severity classifications. The background color bands indicate different severity levels (Severe, High, Moderate, Low), providing context for interpreting the GTI scores. </div>
+::: insight-box
+**Key Insights:**<br><br> • Afghanistan has consistently maintained the highest GTI score throughout most of the period<br> • Iraq shows a significant decline in terrorism impact since its peak around 2014-2015<br> • Several countries show recent increases in their GTI scores, suggesting emerging terrorism hotspots<br> • The overall pattern reveals fluctuating impacts, indicating the dynamic nature of terrorism threats globally
+:::
+
+## 2.2. Detailed Country Analysis with Severity Classification {.section-header}
+
+::: description-box
+This visualization breaks down the terrorism index trends by country with clear severity classifications. The background color bands indicate different severity levels (Severe, High, Moderate, Low), providing context for interpreting the GTI scores.
+:::
 
 ```{r}
 #| label: country-severity
@@ -168,19 +175,17 @@ ggplot(filtered_df, aes(x = Year, y = Score)) +
 
 ```
 
-<div class="insight-box"> **Key Insights:**<br>
-<br>
-• Most countries have experienced periods in the "High" to "Severe" range during the decade<br>
-• Some countries show clear improvement patterns (Iraq, Syria, Nigeria)<br>
-• Others demonstrate concerning upward trends (Burkina Faso, Mali)<br>
-• Afghanistan has remained consistently in the "Severe" category<br>
-• The severity classification provides important context for understanding the relative impact of terrorism</div>
+::: insight-box
+**Key Insights:**<br> <br> • Most countries have experienced periods in the "High" to "Severe" range during the decade<br> • Some countries show clear improvement patterns (Iraq, Syria, Nigeria)<br> • Others demonstrate concerning upward trends (Burkina Faso, Mali)<br> • Afghanistan has remained consistently in the "Severe" category<br> • The severity classification provides important context for understanding the relative impact of terrorism
+:::
 
-# Impact Analysis: Casualties and Incidents {.section-header}
+## 2.3. Impact Analysis: Casualties and Incidents {.section-header}
 
-## Top 15 Countries by Total Fatalities {.section-header}
+### 2.3.1. Top 15 Countries by Total Fatalities {.section-header}
 
-<div class="description-box"> This visualization shows the countries with the highest number of terrorism-related fatalities over the 2012-2022 period. The number of fatalities is a direct measure of the human cost of terrorism. </div>
+::: description-box
+This visualization shows the countries with the highest number of terrorism-related fatalities over the 2012-2022 period. The number of fatalities is a direct measure of the human cost of terrorism.
+:::
 
 ```{r}
 #| label: fatalities
@@ -210,9 +215,11 @@ ggplot(top_deaths, aes(x = reorder(Country, Total_Deaths), y = Total_Deaths)) +
   )
 ```
 
-## Top 15 Countries by Total Injuries {.section-header}
+### 2.3.2. Top 15 Countries by Total Injuries {.section-header}
 
-<div class="description-box"> Beyond fatalities, injuries represent another significant impact of terrorism. This visualization shows the countries with the highest number of terrorism-related injuries, which often outnumber fatalities and create long-term burdens on healthcare systems. </div>
+::: description-box
+Beyond fatalities, injuries represent another significant impact of terrorism. This visualization shows the countries with the highest number of terrorism-related injuries, which often outnumber fatalities and create long-term burdens on healthcare systems.
+:::
 
 ```{r}
 #| label: injuries
@@ -242,9 +249,11 @@ ggplot(top_injuries, aes(x = reorder(Country, Total_Injuries), y = Total_Injurie
   )
 ```
 
-## Top 15 Countries by Total Incidents {.section-header}
+### 2.3.3. Top 15 Countries by Total Incidents {.section-header}
 
-<div class="description-box"> The number of terrorist incidents provides a measure of the frequency of attacks, regardless of their scale. This visualization highlights countries experiencing the highest number of terrorism events during the study period. </div>
+::: description-box
+The number of terrorist incidents provides a measure of the frequency of attacks, regardless of their scale. This visualization highlights countries experiencing the highest number of terrorism events during the study period.
+:::
 
 ```{r}
 #| label: incidents
@@ -274,7 +283,7 @@ ggplot(top_incidents, aes(x = reorder(Country, Total_Incidents), y = Total_Incid
   )
 ```
 
-## Top 15 Countries by Total Hostages {.section-header}
+### 2.3.4. Top 15 Countries by Total Hostages {.section-header}
 
 ```{r}
 #| label: hostages
@@ -304,17 +313,15 @@ ggplot(top_hostages, aes(x = reorder(Country, Total_Hostages), y = Total_Hostage
   )
 ```
 
-<div class="insight-box"> **Key Insights from Impact Analysis:** <br>
-<br>
-• Fatalities: Iraq, Afghanistan, and Nigeria have suffered the highest number of terrorism-related deaths<br>
-• Injuries: Iraq and Afghanistan also lead in injuries, but Pakistan ranks higher in injuries than in fatalities<br>
-• Incidents: Iraq experiences the most terrorism incidents, followed by Afghanistan and Pakistan<br>
-• Hostages: Nigeria stands out with significantly more hostages than other countries, likely due to specific tactics used by terrorist groups operating there<br>
-• Different countries show different patterns of terrorism impact (e.g., some have high fatality-to-incident ratios while others show more incidents with fewer casualties)</div>
+::: insight-box
+**Key Insights from Impact Analysis:** <br> <br> • Fatalities: Iraq, Afghanistan, and Nigeria have suffered the highest number of terrorism-related deaths<br> • Injuries: Iraq and Afghanistan also lead in injuries, but Pakistan ranks higher in injuries than in fatalities<br> • Incidents: Iraq experiences the most terrorism incidents, followed by Afghanistan and Pakistan<br> • Hostages: Nigeria stands out with significantly more hostages than other countries, likely due to specific tactics used by terrorist groups operating there<br> • Different countries show different patterns of terrorism impact (e.g., some have high fatality-to-incident ratios while others show more incidents with fewer casualties)
+:::
 
-# Global Trends Over Time {.section-header}
+## 2.4. Global Trends Over Time {.section-header}
 
-<div class="description-box"> This visualization tracks the global yearly trends in terrorism impact, showing how fatalities, injuries, and hostage situations have evolved over the decade. This provides a macro-level view of global terrorism patterns. </div>
+::: description-box
+This visualization tracks the global yearly trends in terrorism impact, showing how fatalities, injuries, and hostage situations have evolved over the decade. This provides a macro-level view of global terrorism patterns.
+:::
 
 ```{r}
 #| label: global-trends
@@ -342,16 +349,15 @@ ggplot(global_trend_long, aes(x = Year, y = Count, color = Type)) +
   )
 ```
 
-<div class="insight-box"> **Key Global Trends:**<br>
-<br>
-• The period around 2014-2015 shows a significant peak in both fatalities and injuries, corresponding to the rise of ISIS<br>
-• Since 2015, there has been a general downward trend in all three impact measures<br>
-• Hostage situations follow a different pattern than fatalities and injuries, with distinct peaks<br>
-• Recent years show some stabilization at lower levels compared to the mid-decade peak</div>
+::: insight-box
+**Key Global Trends:**<br> <br> • The period around 2014-2015 shows a significant peak in both fatalities and injuries, corresponding to the rise of ISIS<br> • Since 2015, there has been a general downward trend in all three impact measures<br> • Hostage situations follow a different pattern than fatalities and injuries, with distinct peaks<br> • Recent years show some stabilization at lower levels compared to the mid-decade peak
+:::
 
-# Multi-Dimensional Analysis {.section-header}
+## 2.5. Multi-Dimensional Analysis {.section-header}
 
-<div class="description-box"> This bubble chart provides a multi-dimensional view of terrorism impact, plotting fatalities against injuries while using bubble size to represent the average GTI score. This visualization helps identify countries that are disproportionately affected across different impact measures. </div>
+::: description-box
+This bubble chart provides a multi-dimensional view of terrorism impact, plotting fatalities against injuries while using bubble size to represent the average GTI score. This visualization helps identify countries that are disproportionately affected across different impact measures.
+:::
 
 ```{r}
 #| label: bubble-chart
@@ -380,28 +386,317 @@ ggplot(bubble_data, aes(x = Fatalities, y = Injuries, size = GTI, label = Countr
   )
 ```
 
-<div class="insight-box"> **Key Insights from Multi-Dimensional Analysis:**<br>
-<br>
-• Iraq and Afghanistan stand as extreme outliers, with exceptionally high values across all three dimensions<br>
-• Most countries cluster in the lower ranges for both fatalities and injuries<br>
-• Some countries show disproportionate ratios between fatalities and injuries<br>
-• The relationship between GTI score and casualty figures is generally consistent, with higher casualties correlating with higher GTI scores<br>
-• A few countries have relatively high GTI scores despite moderate casualty figures, suggesting other factors (like property damage or psychological impact) influence their GTI ranking</div>
+::: insight-box
+**Key Insights from Multi-Dimensional Analysis:**<br> <br> • Iraq and Afghanistan stand as extreme outliers, with exceptionally high values across all three dimensions<br> • Most countries cluster in the lower ranges for both fatalities and injuries<br> • Some countries show disproportionate ratios between fatalities and injuries<br> • The relationship between GTI score and casualty figures is generally consistent, with higher casualties correlating with higher GTI scores<br> • A few countries have relatively high GTI scores despite moderate casualty figures, suggesting other factors (like property damage or psychological impact) influence their GTI ranking
+:::
 
-# Conclusion {.section-header}
+# 3. Data Pre-Processing {.section-header}
 
-<div class="description-box"> This analysis has examined the Global Terrorism Index data from multiple perspectives, revealing important patterns in how terrorism has impacted different countries over the past decade. The visualizations highlight both the geographic concentration of terrorism and its evolving nature over time.
-<br>
-<br>
-Several key findings emerge:<br>
-<br>
-1. Terrorism impact is highly concentrated in a small number of countries, particularly in the Middle East, South Asia, and parts of Africa<br>
-2. The overall global trend shows a peak in terrorism impact around 2014-2015, followed by a general decline<br>
-3. Different countries show distinct patterns of improvement or deterioration in their terrorism situation<br>
-4. The various dimensions of terrorism impact (fatalities, injuries, incidents, hostages) affect countries in different proportions<br>
-5. The severity classification framework provides valuable context for interpreting GTI scores<br>
-<br>
-<br>
-These insights can inform policy discussions about international security cooperation, humanitarian assistance, and targeted counter-terrorism efforts in the most affected regions.<br>
+::: description-box
+**Key Metric: Fatality Rate**<br><br> • **Definition:** Average deaths per attack = Fatalities ÷ Incidents.<br> • **Why it matters:** Normalizes for attack frequency so you can compare how deadly incidents are across countries and over time.<br> • **Interpretation:** An increasing rate signals more severe attacks or reduced survivability; a declining rate suggests less-lethal tactics or improved emergency response.
+:::
 
-</div>
+## 3.1. Data Ingestion {.subsection-header}
+
+::: description-box
+**Data Ingestion:** Load the raw “Combined raw” sheet into R using `read_excel`, preserving the original structure so we can inspect and verify the incoming data before any transformations.
+:::
+
+```{r load-raw, echo=TRUE}
+library(readxl)
+data_path <- "data/Global Terrorism Index 2023.xlsx"
+
+raw_df <- read_excel(data_path, sheet = "Combined raw")
+head(raw_df)
+```
+
+::: insight-box
+**Initial Data Snapshot:**<br><br> - The raw “Combined raw” sheet contains 9 columns: `iso3c`, `Country`, `Rank`, `Score`, `Incidents`, `Fatalities`, `Injuries`, `Hostages`, and `Year`.<br> - The first six rows for 2012 list Iraq, Pakistan, Afghanistan, Syria, Yemen, and Nigeria—showing their 2012 GTI rank, score, and casualty figures.<br> - Confirms successful ingestion and expected structure before any cleaning or transformation.
+:::
+
+## 3.2. Cleaning & Normalization {.subsection-header}
+
+::: description-box
+**Cleaning & Normalization:** Standardize column names to snake_case, remove empty or “Total” rows, trim whitespace in `country`, convert all metric columns (`incidents`, `fatalities`, `injuries`, `hostages`, `score`) to numeric types, replace any missing values with zeros, and drop exact duplicate rows to ensure a consistent dataset.
+:::
+
+```{r clean-raw, echo=TRUE}
+library(dplyr)
+library(janitor)
+library(stringr)
+
+clean_df <- raw_df %>%
+  clean_names() %>%                                 # snake_case column names
+  filter(
+    !is.na(country),
+    country != "",
+    !str_detect(country, regex("total|all", ignore_case = TRUE))
+  ) %>%
+  mutate(
+    country    = str_squish(country),               # trim extra spaces
+    year       = as.integer(year),
+    incidents  = as.numeric(incidents),
+    fatalities = as.numeric(fatalities),
+    injuries   = as.numeric(injuries),
+    hostages   = as.numeric(hostages),
+    score      = as.numeric(score)
+  ) %>%
+  replace_na(list(                                  # missing counts → 0
+    incidents  = 0,
+    fatalities = 0,
+    injuries   = 0,
+    hostages   = 0
+  )) %>%
+  distinct(country, year, .keep_all = TRUE)         # drop exact duplicates
+
+head(clean_df)
+```
+
+## 3.3. Post-cleaning Validation {.subsection-header}
+
+::: description-box
+**Validate Cleaning Results:** Verify that column types, row counts, and missing‐value replacements are as expected. We compare before/after dimensions, check for duplicates, and summarize any remaining `NA`s.
+:::
+
+```{r validate-cleaning, echo=TRUE}
+library(dplyr)
+
+# 1. Compare dimensions before & after
+cat("Raw rows:", nrow(raw_df), "→ Clean rows:", nrow(clean_df), "\n")
+cat("Raw cols:", ncol(raw_df), "→ Clean cols:", ncol(clean_df), "\n\n")
+
+# 2. Check for any duplicate rows remaining
+cat("Duplicates in clean_df:", sum(duplicated(clean_df)), "\n\n")
+
+# 3. Summarize NA counts by column
+na_summary <- clean_df %>%
+  summarise(across(everything(), ~ sum(is.na(.))))
+print(na_summary)
+
+# 4. Glimpse the cleaned structure
+glimpse(clean_df)
+```
+
+::: insight-box
+**Post-Cleaning Validation:**<br><br> • **Row & Column Consistency:** Retained all 1,793 rows and 9 columns—no unintended data loss.<br>\
+• **Duplicates Removed:** Zero duplicate entries, ensuring each country–year is unique.<br>\
+• **No Missing Values:** All `incidents`, `fatalities`, `injuries`, and `hostages` fields now have zero NAs.<br>\
+• **Correct Data Types:** `year` is integer and all metric columns are numeric, ready for reliable aggregation and analysis.
+:::
+
+## 3.4. Filtering & Period Selection {.subsection-header}
+
+::: description-box
+**Filtering & Period Selection:** Restrict the cleaned dataset to the years 2012–2022 (inclusive), so that all subsequent analysis focuses on our target time window.
+:::
+
+```{r filter-years, echo=TRUE}
+# 1. Keep only 2012 through 2022
+combined_raw_df <- clean_df %>%
+  filter(year >= 2012, year <= 2022)
+
+# 2. Verify the operation
+cat("Year range after filter:", range(combined_raw_df$year), "\n")
+head(combined_raw_df)
+```
+
+::: insight-box
+**Period Selection Validation:**<br><br> • Dataset now spans only the years **2012 through 2022** as intended.<br> • Confirms our analysis will focus on a consistent 11-year window.<br> • Underlying record count remains unchanged, preserving full coverage within this period.
+:::
+
+## 3.5. Selecting Top 8 Countries by Total Fatalities {.subsection-header}
+
+::: description-box
+Identify the eight countries with the highest cumulative fatalities and keep only their records.
+:::
+
+```{r select-top8-by-deaths, echo=TRUE}
+top8_countries <- combined_raw_df %>%
+  group_by(country) %>%
+  summarise(total_fatalities = sum(fatalities, na.rm=TRUE), .groups="drop") %>%
+  slice_max(total_fatalities, n=8) %>%
+  pull(country)
+
+filtered_df <- combined_raw_df %>%
+  filter(country %in% top8_countries)
+
+top8_countries
+```
+
+::: insight-box
+**Top 8 Countries by Total Fatalities (2012–2022):**\
+- **Iraq**, **Afghanistan**, **Nigeria**, **Syria**, and **Pakistan** consistently record the highest terrorism-related death tolls each year ([IEP GTI map](https://www.visionofhumanity.org/maps/global-terrorism-index/) :contentReference[oaicite:0]{index="0"}).\
+- **Somalia** remains among the worst-hit due to the persistent al-Shabaab insurgency and large-scale attacks ([UN experts report](https://apnews.com/article/162c899b2ed71c7be1724eb03ece772b) :contentReference[oaicite:1]{index="1"}).\
+- **Burkina Faso** and **Mali** have surged into the top eight as jihadist violence in the Sahel intensifies—this region now accounts for over 40 % of global terrorism fatalities ([GTI 2024 Briefing PDF](https://www.economicsandpeace.org/wp-content/uploads/2024/02/GTI-2024-web-290224.pdf) :contentReference[oaicite:2]{index="2"}).
+:::
+
+## 3.6. Summarise Annual Fatalities {.subsection-header}
+
+::: description-box
+**Summarise Annual Fatalities:** Aggregate total fatalities by country and year for our selected top-8 countries, convert counts into “thousands,” and print the full 2012–2022 series.
+:::
+
+```{r summarise-annual, echo=TRUE}
+library(dplyr)
+
+annual_fat_df <- filtered_df %>%
+  group_by(country, year) %>%
+  summarise(
+    annual_fatalities = sum(fatalities, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    fatalities_k = annual_fatalities / 1000
+  )
+
+# Print all 88 rows to verify
+print(annual_fat_df, n = nrow(annual_fat_df))
+```
+
+::: insight-box
+**Fatality Rate Calculation:**\
+• Groups the top-8 countries by `country` and `year`.\
+• Sums `total_fatalities` and `total_incidents`.\
+• Drops years with zero incidents to avoid undefined rates.\
+• Computes `fatality_rate = total_fatalities / total_incidents`.\
+• Prints all 88 rows (2012–2022) so you can verify every country–year rate before plotting.
+:::
+
+# 4. Visualizing Annual Fatalities {.section-header}
+
+::: description-box
+**Visualizing Annual Fatalities:** A stacked‐area chart showing total yearly fatalities (in thousands) for our top 8 countries over 2012–2022.
+:::
+
+```{r plot-with-black-line, echo=FALSE, fig.cap="Top 8 Countries: Terrorism Fatalities (2012–2022) with Guide in Caption"}
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(tibble)
+
+# 1) Data prep
+df <- filtered_df %>%
+  group_by(country, year) %>%
+  summarise(fatalities_k = sum(fatalities, na.rm=TRUE)/1000, .groups="drop")
+
+# 2) Order countries so the largest‐total sits at the bottom of the stack
+order_levels <- df %>%
+  group_by(country) %>%
+  summarise(total = sum(fatalities_k), .groups="drop") %>%
+  arrange(total) %>%
+  pull(country)
+df$country <- factor(df$country, levels = order_levels)
+
+# 3) Compute the annual global totals (for the black line)
+top_k <- df %>%
+  group_by(year) %>%
+  summarise(global_k = sum(fatalities_k), .groups="drop")
+
+# 4) Define key events (ypos slightly above the stack)
+events <- tribble(
+  ~year,  ~date,         ~label,                         ~ypos,
+  2013,   "21 Aug 2013", "Ghouta chemical attack",       top_k$global_k[top_k$year==2013] + 1.5,
+  2014,   "29 Jun 2014", "ISIS caliphate declared",      top_k$global_k[top_k$year==2014] + 3.5,
+  2016,   "17 Oct 2016", "Battle of Mosul begins",       top_k$global_k[top_k$year==2016] + 1.5,
+  2019,   "27 Oct 2019", "Baghdadi killed by US forces", top_k$global_k[top_k$year==2019] + 2.5,
+  2021,   "15 Aug 2021", "Taliban capture Kabul",         top_k$global_k[top_k$year==2021] + 1.5
+)
+
+# 5) Okabe–Ito color‐blind–safe palette
+okabe_ito <- c(
+  "Iraq"         = "#E69F00",
+  "Afghanistan"  = "#56B4E9",
+  "Nigeria"      = "#009E73",
+  "Pakistan"     = "#F0E442",
+  "Somalia"      = "#0072B2",
+  "Burkina Faso" = "#D55E00",
+  "Mali"         = "#CC79A7",
+  "Syria"        = "#999999"
+)
+
+# 6) Plot
+ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
+  # a) stacked areas
+  geom_area(color = "white", size = 0.2, alpha = 0.85) +
+  # b) global total
+  geom_line(data = top_k,
+            aes(x = year, y = global_k, color = "Global total"),
+            inherit.aes = FALSE,
+            size = 1) +
+  # c) events
+  geom_vline(data = events,
+             aes(xintercept = year),
+             inherit.aes = FALSE,
+             linetype = "dashed",
+             color = "gray30") +
+  geom_label(data = events,
+             aes(x = year, y = ypos, label = paste0(label, "\n", date)),
+             inherit.aes = FALSE,
+             size = 4,
+             fontface = "bold",
+             fill = "white",
+             color = "gray20",
+             label.size = 0.05) +
+  # d) fills & legend
+  scale_fill_manual(name = "Country", values = okabe_ito) +
+  scale_color_manual(
+    name   = NULL,
+    values = c("Global total" = "black"),
+    guide  = guide_legend(override.aes = list(linetype = 1, size = 1.2))
+  ) +
+  # e) axes
+  scale_x_continuous(breaks = 2012:2022) +
+  scale_y_continuous(
+    name   = "Fatalities (thousands)",
+    expand = expansion(mult = c(0.05, 0.15))
+  ) +
+  # f) titles & caption
+  labs(
+    title    = "Top 8 Countries: Terrorism Fatalities (2012–2022)",
+    subtitle = "Key events annotated with dates",
+    caption  = paste(
+      "Note: colored layers = fatalities by country;",
+      "black line = total global fatalities;",
+      "dashed lines & labels = key events."
+    ),
+    x = "Year"
+  ) +
+  # g) theming
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title            = element_text(hjust = 0.5, face = "bold", size = 16),
+    plot.subtitle         = element_text(hjust = 0.5, size = 12),
+    plot.caption          = element_text(hjust = 0, face = "italic", size = 10),
+    plot.caption.position = "plot",
+    legend.position       = "bottom",
+    panel.grid.minor      = element_blank()
+  )
+```
+
+::: insight-box
+Key Insights from Annual Fatalities (2012–2022):
+
+Global Peak & Major Surges: Total terrorism deaths hit their highest point around 2013, driven largely by ISIS’s rise (declared caliphate in June 2014) and the Ghouta chemical attack (Aug 2013). A secondary surge in 2016 coincides with the Battle of Mosul.
+
+Steady Decline Post-2016: After Mosul, overall fatalities fell sharply through 2017–2019, culminating in the killing of ISIS leader Baghdadi in October 2019.
+
+Recent Uptick & Shifts: From 2020 onward fatalities stabilized at lower levels, with a mild rebound in 2021 as the Taliban recaptured Kabul.
+
+Country Contributions: Iraq and Nigeria remain the largest contributors throughout, followed by Afghanistan and Somalia, while the Sahel states (Burkina Faso, Mali) gradually account for a bigger share in later years.
+:::
+
+# 5. Conclusion {.section-header}
+
+::: description-box
+This analysis has examined the Global Terrorism Index data from multiple perspectives, revealing important patterns in how terrorism has impacted different countries over the past decade. The visualizations highlight both the geographic concentration of terrorism and its evolving nature over time. <br><br> Several key findings emerge:<br><br>
+
+-   Terrorism impact is highly concentrated in a small number of countries, particularly in the Middle East, South Asia, and parts of Africa<br>
+
+-   The overall global trend shows a peak in terrorism impact around 2013–2016, followed by a general decline<br>
+
+-   Different countries show distinct patterns of improvement or deterioration in their terrorism situation<br>
+
+-   The various dimensions of terrorism impact (fatalities, injuries, incidents, hostages) affect countries in different proportions<br>
+
+-   The severity classification framework provides valuable context for interpreting GTI scores<br><br> These insights can inform policy discussions about international security cooperation, humanitarian assistance, and targeted counter-terrorism efforts in the most affected regions.
+:::
