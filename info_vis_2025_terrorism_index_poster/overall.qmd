@@ -814,3 +814,12 @@ p %>% layout(
   hovermode = "x unified"
 )
 ```
+
+```{r}
+htmlwidgets::saveWidget(
+  p,                                     # your plotly object
+  file          = "terror-fatalities-stack.html",
+  selfcontained = TRUE
+)
+
+```
