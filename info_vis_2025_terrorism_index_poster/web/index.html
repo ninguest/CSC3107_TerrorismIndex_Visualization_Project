@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Terrorism Index Analysis (2012-2022)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23000" width="1200" height="800"/><g fill="%23111"><circle cx="200" cy="150" r="100" opacity="0.1"/><circle cx="800" cy="300" r="80" opacity="0.08"/><circle cx="1000" cy="600" r="120" opacity="0.06"/></g></svg>');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        .header-bg-video {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .header-bg-video iframe {
+            width: 100vw;
+            height: 100vh;
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            filter: brightness(0.5) blur(1px);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+            animation: fadeInUp 2s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 2s ease-out 0.5s both;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.8;
+            animation: fadeInUp 2s ease-out 1s both;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(13, 13, 35, 0.95), rgba(22, 33, 62, 0.95));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); /* For Safari */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1.2rem 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #ff6b6b 25%, 
+                #4ecdc4 50%, 
+                #45b7d1 75%, 
+                transparent
+            );
+            background-size: 200% 100%;
+            animation: navGradientFlow 3s ease-in-out infinite;
+            z-index: -1; /* Send behind the nav content */
+        }
+
+
+        @keyframes navGradientFlow {
+            0%, 100% { background-position: 200% 0; }
+            50% { background-position: -200% 0; }
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            gap: 1.5rem;
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav li {
+            position: relative;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        nav a:hover::before {
+            left: 0;
+        }
+
+        nav a:hover::after {
+            left: 100%;
+        }
+
+        nav a:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            border-color: rgba(255, 107, 107, 0.5);
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Active state indicator */
+        nav a.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Floating orbs animation */
+        nav::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            width: 4px;
+            height: 4px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            box-shadow: 
+                20px 0 0 #ff6b6b,
+                40px 0 0 #45b7d1,
+                -20px 0 0 #ff6b6b,
+                -40px 0 0 #4ecdc4;
+            animation: floatingOrbs 4s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatingOrbs {
+            0%, 100% { 
+                transform: translateY(-50%) translateX(0);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-50%) translateX(10px);
+                opacity: 0.8;
+            }
+        }
+
+        /* Navigation indicator line */
+        .nav-indicator {
+            position: absolute;
+            bottom: -2px;
+            height: 3px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        nav a:hover .nav-indicator {
+            opacity: 1;
+        }
+
+        /* Main content sections */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        }
+
+        /* About section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .about-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .about-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4ecdc4;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+            padding: 4rem 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 1rem;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+            transition: left 0.3s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
+        }
+
+        .cta-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Stats section */
+        .stats-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4rem 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #4ecdc4;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff6b6b;
+        }
+
+        /* Large screens - more spacing */
+        @media (min-width: 1200px) {
+            nav ul {
+                gap: 2rem;
+            }
+            
+            nav a {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Medium screens - balanced spacing */
+        @media (min-width: 769px) and (max-width: 1199px) {
+            nav ul {
+                gap: 1.2rem;
+            }
+            
+            nav a {
+                padding: 0.7rem 1.1rem;
+                font-size: 0.88rem;
+            }
+        }
+
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem;
+                line-height: 1.2;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+            }
+
+            nav ul {
+                gap: 0.3rem;
+                padding: 0 1rem;
+                flex-wrap: wrap;
+            }
+
+            nav a {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+                margin: 0.2rem;
+            }
+
+            nav::after {
+                display: none;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .about-card {
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .cta-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                margin: 0.5rem;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-description {
+                font-size: 0.9rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.2rem;
+            }
+
+            nav a {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+                margin: 0.1rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .about-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .about-card p {
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .stat-number {
+                font-size: 1.8rem;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+            }
+
+            .cta-button {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 30px;
+            }
+
+            #references div {
+                padding: 1.5rem;
+            }
+
+            #references p {
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+        }
+
+        /* Touch-friendly enhancements */
+        @media (max-width: 768px) {
+            nav a:hover {
+                transform: none;
+            }
+
+            .about-card:hover {
+                transform: none;
+            }
+
+            .cta-button:hover {
+                transform: none;
+            }
+
+            /* Increase touch targets */
+            nav a, .cta-button {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* References Section */
+        .references-container {
+            background: rgba(255,255,255,0.07);
+            padding: 2.5rem 2rem;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.13);
+            box-shadow: 0 4px 32px rgba(30,60,90,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            justify-content: space-between;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .references-group {
+            flex: 1 1 350px;
+            min-width: 300px;
+        }
+
+        .references-group h3 {
+            color: #4ecdc4;
+            font-size: 1.25rem;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-left: 4px solid #ff6b6b;
+            padding-left: 0.7rem;
+            background: linear-gradient(90deg, rgba(255,107,107,0.08), rgba(78,205,196,0.08));
+            border-radius: 4px;
+        }
+
+        .references-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .references-list li {
+            margin-bottom: 1.2rem;
+            padding: 1rem 1.2rem;
+            background: rgba(22,33,62,0.13);
+            border-radius: 10px;
+            border-left: 3px solid #4ecdc4;
+            transition: background 0.2s;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            box-shadow: 0 2px 8px rgba(78,205,196,0.04);
+        }
+
+        .references-list li:hover {
+            background: rgba(78,205,196,0.10);
+        }
+
+        .references-list a {
+            color: #ff6b6b;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .references-list a:hover {
+            color: #4ecdc4;
+            text-decoration: underline wavy;
+        }
+
+        /* Responsive for mobile */
+        @media (max-width: 900px) {
+            .references-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem 0.5rem;
+            }
+            .references-group {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#interactive">Interactive Plot</a></li>
+            <li><a href="#references">References</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header id="home">
+        <div class="header-bg-video">
+            <iframe
+                src="https://www.youtube.com/embed/3qtkNveME0U?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&modestbranding=1"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+                title="Header Background Video"
+            ></iframe>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Global Terrorism Index Analysis</h1>
+            <p class="hero-subtitle">Comprehensive Analysis (2012-2022)</p>
+            <p class="hero-description">
+                Exploring patterns, trends, and impacts of global terrorism through comprehensive data analysis. 
+                Understanding the evolution of terrorist activities worldwide over the past decade to inform policy and security measures.
+            </p>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <h2 class="section-title fade-in">About This Analysis</h2>
+        <div class="about-grid">
+            <div class="about-card fade-in">
+                <h3>🎯 Objective</h3>
+                <p>
+                    This analysis aims to identify key trends and patterns in global terrorism from 2012 to 2022, providing insights into the evolving nature of terrorist activities. It supports informed decision-making and strategic planning for policymakers and security stakeholders.
+                </p>
+            </div>
+            <div class="about-card fade-in">
+                <h3>📊 Data Sources</h3>
+                <p>
+                    Our primary data source is the Global Terrorism Index 2023 dataset from Kaggle, which includes detailed information on over 47,000 terrorist incidents from 2012 to 2022. The dataset can be accessed at <a href="https://www.kaggle.com/datasets/ddosad/global-terrorism-index-2023" target="_blank">Global Terrorism Index 2023</a>.
+                </p>
+            </div>
+            <div class="about-card fade-in">
+                <h3>🔍 Methodology</h3>
+                <p>
+                    We used advanced statistical analysis and data visualization techniques with the Tidyverse suite of R packages, including dplyr, tidyr, and ggplot2, to uncover meaningful insights and trends in the terrorism data.
+                </p>
+            </div>
+            <div class="about-card fade-in">
+                <h3>🌍 Global Impact</h3>
+                <p>
+                    This analysis provides a comprehensive overview of the impact of terrorism on global stability and safety. By visualizing trends and identifying key patterns, it enhances understanding of the evolving nature of global terrorism, informing policy responses and improving security measures.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Findings -->
+    <section class="stats-section">
+        <div class="section">
+            <h2 class="section-title fade-in">Key Findings (2012-2022)</h2>
+            <div class="stats-grid">
+                <div class="stat-item fade-in">
+                    <span class="stat-number">47,000+</span>
+                    <span class="stat-label">Total Incidents Analyzed</span>
+                </div>
+                <div class="stat-item fade-in">
+                    <span class="stat-number">163</span>
+                    <span class="stat-label">Countries Affected</span>
+                </div>
+                <!-- Remove or verify the following items -->
+                <!--
+                <div class="stat-item fade-in">
+                    <span class="stat-number">2,341</span>
+                    <span class="stat-label">Terrorist Groups Identified</span>
+                </div>
+                <div class="stat-item fade-in">
+                    <span class="stat-number">-23%</span>
+                    <span class="stat-label">Reduction in Global Impact</span>
+                </div>
+                -->
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA Section -->
+    <section id="interactive" class="cta-section">
+        <div class="section">
+            <h2 class="section-title fade-in">Explore Interactive Visualizations</h2>
+            <p class="fade-in" style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">
+                Explore the impact of terrorism on the top 8 most affected countries with our interactive plot. 
+                Dive into the data to observe trends in terrorism-related fatalities over the years, compare the impact across different countries, and understand how these trends have evolved from 2012 to 2022. 
+                This visualization provides insights into the distribution of terrorism fatalities and helps identify the countries most severely affected by terrorism.
+            </p>
+            <iframe src="interactiveplot.html" width="100%" height="600px" frameborder="0" allowfullscreen></iframe>
+            <a href="#" class="cta-button fade-in" onclick="openInteractivePlot()">
+                <span>🚀 Check Out More Graphs to Understand the Impact of Terrorism</span>
+            </a>
+            <a href="../overall.html" class="cta-button fade-in" style="background: linear-gradient(45deg, #4ecdc4, #ff6b6b); margin-top: 1rem;" target="_blank">
+            <span>📄 Check out how we generate this data</span>
+        </a>
+        </div>
+    </section>
+
+    <!-- References Section -->
+    <section id="references" class="section">
+        <h2 class="section-title fade-in">References</h2>
+        <div class="references-container fade-in">
+            <div class="references-group">
+                <h3>Academic & Data Science References</h3>
+                <ul class="references-list">
+                    <li>
+                        Healy, K. (2018). <i>Data Visualization: A Practical Introduction</i>. Princeton, NJ: Princeton University Press.
+                    </li>
+                    <li>
+                        Wickham, H., &amp; Grolemund, G. (2017). <i>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</i>. Sebastopol, CA: O'Reilly Media.
+                    </li>
+                    <li>
+                        Institute for Economics and Peace (IEP). (2023). <i>Global Terrorism Index 2023: Measuring the Impact of Terrorism</i>. Sydney: IEP. 
+                        <a href="https://www.economicsandpeace.org/global-terrorism-index/" target="_blank">https://www.economicsandpeace.org/global-terrorism-index/</a>
+                    </li>
+                    <li>
+                        R Core Team. (2023). <i>R: A Language and Environment for Statistical Computing</i>. Vienna: R Foundation for Statistical Computing. 
+                        <a href="https://www.R-project.org/" target="_blank">https://www.R-project.org/</a>
+                    </li>
+                    <li>
+                        ReliefWeb. (n.d.). <i>Mosul report 17Oct2016-10Jul2017, FINAL as of 30 October…</i>
+                        <a href="https://reliefweb.int/attachments/1319cb61-4d76-3cfa-bfd8-c075e91d0801/Mosul_report%2017Oct2016-10Jul201731%20October_2017.pdf" target="_blank">https://reliefweb.int/attachments/1319cb61-4d76-3cfa-bfd8-c075e91d0801/Mosul_report%2017Oct2016-10Jul201731%20October_2017.pdf</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="references-group">
+                <h3>Data & News Sources</h3>
+                <ul class="references-list">
+                    <li>
+                        CNN. (2016, December 3). <i>Iraq disputes number killed in battle against ISIS</i> 
+                        <a href="https://edition.cnn.com/2016/12/03/middleeast/iraq-mosul-battle-deaths/" target="_blank">https://edition.cnn.com/2016/12/03/middleeast/iraq-mosul-battle-deaths/</a>
+                    </li>
+                    <li>
+                        CNN. (2016, December 2). <i>Mosul battle: Mounting death toll, urban warfare slow</i> 
+                        <a href="https://www.cnn.com/2016/12/02/middleeast/iraq-mosul-battle-isis/index.html" target="_blank">https://www.cnn.com/2016/12/02/middleeast/iraq-mosul-battle-isis/index.html</a>
+                    </li>
+                    <li>
+                        CBS News. (2017, December 20). <i>AP says Mosul ISIS battle civilian death toll 10-times...</i> 
+                        <a href="https://www.cbsnews.com/news/ap-mosul-isis-civilian-death-toll-10-times-higher-us-iraq-acknowledge/" target="_blank">https://www.cbsnews.com/news/ap-mosul-isis-civilian-death-toll-10-times-higher-us-iraq-acknowledge/</a>
+                    </li>
+                    <li>
+                        Vox. (2017, December 20). <i>The US spent months battling ISIS in Mosul. At least 9,000...</i> 
+                        <a href="https://www.vox.com/world/2017/12/20/16800510/mosul-death-toll-isis-trump-war" target="_blank">https://www.vox.com/world/2017/12/20/16800510/mosul-death-toll-isis-trump-war</a>
+                    </li>
+                    <li>
+                        AP News. (2017, December 21). <i>Freedom from IS in Mosul costs lives of 9,000-plus civilians</i>
+                        <a href="https://www.apnews.com/article/6d94ba30348e4a25bf76e031b0212ef9" target="_blank">https://www.apnews.com/article/6d94ba30348e4a25bf76e031b0212ef9</a>
+                    </li>
+                    <li>
+                        Human Rights Watch. (2013, September 10). <i>Attacks on Ghouta: Analysis of alleged use of chemical weapons in Syria.</i> 
+                        <a href="https://www.hrw.org/report/2013/09/10/attacks-ghouta/analysis-alleged-use-chemical-weapons-syria" target="_blank">https://www.hrw.org/report/2013/09/10/attacks-ghouta/analysis-alleged-use-chemical-weapons-syria</a>
+                    </li>
+                    <li>
+                        Defense.gov. (2019, October 27). <i>U.S. Forces Kill ISIS Founder, Leader Baghdadi in Syria.</i> 
+                        <a href="https://www.defense.gov/news/news-stories/article/1999751/us-forces-kill-isis-founder-leader-baghdadi-in-syria/" target="_blank">https://www.defense.gov/news/news-stories/article/1999751/us-forces-kill-isis-founder-leader-baghdadi-in-syria/</a>
+                    </li>
+                    <li>
+                        Telegrafi. (2016). <i>Training of Russia's anti-terrorist troops - like a real event (Video).</i>
+                        <a href="https://telegrafi.com/en/the-training-of-the-anti-terrorist-troops-of-russias-as-a-real-video-event/" target="_blank">
+                            https://telegrafi.com/en/the-training-of-the-anti-terrorist-troops-of-russias-as-a-real-video-event/
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#interactive">Interactive Plot</a>
+                <a href="#references">References</a>
+            </div>
+            <p style="opacity: 0.7;">&copy; 2025 Global Terrorism Index Analysis. All rights reserved.</p>
+            <p style="opacity: 0.5; font-size: 0.9rem; margin-top: 1rem;">
+                This analysis is for educational and research purposes. Data visualization and insights support academic understanding of global security trends.
+            </p>
+            <p style="opacity: 0.7; margin-top: 1.5rem;">
+                Made with ❤️ by Tee Yu Cheng
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated background particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Scroll animations
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Interactive plot function (placeholder)
+        function openInteractivePlot() {
+            // In your actual implementation, you would navigate to the interactive plot page:
+            // window.open('interactive-plot.html', '_blank');
+            window.open('../index.html', '_blank');
+        }
+
+        // Navbar background on scroll with enhanced effects
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const scrolled = window.scrollY;
+            
+            if (scrolled > 100) {
+                nav.style.background = 'linear-gradient(135deg, rgba(13, 13, 35, 0.98), rgba(22, 33, 62, 0.98))';
+                nav.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
+                nav.style.backdropFilter = 'blur(25px)';
+                nav.style.webkitBackdropFilter = 'blur(25px)';
+            } else {
+                nav.style.background = 'linear-gradient(135deg, rgba(13, 13, 35, 0.95), rgba(22, 33, 62, 0.95))';
+                nav.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+                nav.style.backdropFilter = 'blur(20px)';
+                nav.style.webkitBackdropFilter = 'blur(20px)';
+            }
+        });
+
+        // Add active state to navigation
+        function setActiveNavItem() {
+            const sections = document.querySelectorAll('section, header');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveNavItem);
+
+        // Mobile menu toggle (for very small screens)
+        function toggleMobileMenu() {
+            const navUl = document.querySelector('nav ul');
+            navUl.classList.toggle('mobile-menu-open');
+        }
+
+        // Handle mobile viewport height issues
+        function setMobileViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        window.addEventListener('resize', setMobileViewportHeight);
+        window.addEventListener('orientationchange', setMobileViewportHeight);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            observeElements();
+            setMobileViewportHeight();
+        });
+    </script>
+</body>
+</html>

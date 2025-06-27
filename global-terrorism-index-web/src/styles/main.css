@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Terrorism Index Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Global Terrorism Index Analysis</h1>
+        <p>Understanding the trends and impacts of terrorism worldwide.</p>
+    </header>
+    <main>
+        <section class="statistics">
+            <h2>Key Statistics</h2>
+            <div class="statistic" id="stat1">
+                <h3>Total Incidents</h3>
+                <p class="number">10,000</p>
+            </div>
+            <div class="statistic" id="stat2">
+                <h3>Countries Affected</h3>
+                <p class="number">70</p>
+            </div>
+            <div class="statistic" id="stat3">
+                <h3>Casualties</h3>
+                <p class="number">25,000</p>
+            </div>
+        </section>
+        <section class="trends">
+            <h2>Trends Over Time</h2>
+            <canvas id="trendChart"></canvas>
+        </section>
+        <section class="insights">
+            <h2>Insights</h2>
+            <p>The Global Terrorism Index provides a comprehensive overview of the impact of terrorism globally, highlighting the regions most affected and the trends over time.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Global Terrorism Index Analysis</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,290 @@
+---
+title: "Global Terrorism Index Analysis (2012-2022)"
+author: "created by `LIM JING CHUAN JONATHAN`"
+format: 
+  html:
+    title-block-style: none
+editor: visual
+---
+
+```{=html}
+<style>
+h1, h2, h3, h4 {
+  color: #2c3e50;
+}
+.section-divider {
+  border-top: 1px solid #e0e0e0;
+  margin: 2em 0;
+}
+.description-box {
+  background-color: #f8f9fa;
+  padding: 1em;
+  margin: 1em 0;
+  border-radius: 4px;
+}
+.highlight-box {
+  border-left: 5px solid #f0ad4e;
+  background-color: #fcf8e3;
+  padding: 1em;
+  margin: 1em 0;
+}
+.insight-box {
+  border-left: 5px solid #5bc0de;
+  background-color: #f0f7fd;
+  padding: 1em;
+  margin: 1em 0;
+}
+</style>
+```
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| echo: false
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Load the data
+df <- read_excel("data/Global Terrorism Index 2023.xlsx", sheet = "Overall Scores")
+
+# Convert to long format
+long_df <- df %>%
+  pivot_longer(cols = matches("^[0-9]{4} Score$"), names_to = "Year", values_to = "Score") %>%
+  mutate(Year = as.integer(gsub(" Score", "", Year)))
+
+# Filter top 15 countries based on latest score
+top15 <- df %>%
+  select(Country, `2022 Score`) %>%
+  arrange(desc(`2022 Score`)) %>%
+  slice(1:15) %>%
+  pull(Country)
+
+filtered_df <- long_df %>%
+  filter(Country %in% top15)
+
+# Read combined raw sheet
+data_path <- "data/Global Terrorism Index 2023.xlsx"
+combined_raw_df <- read_excel(data_path, sheet = "Combined raw")
+
+# Clean and filter data
+combined_raw_df <- combined_raw_df %>%
+  mutate(across(c(Incidents, Fatalities, Injuries, Hostages, Score), as.numeric),
+         Year = as.integer(Year)) %>%
+  filter(Year >= 2012 & Year <= 2022)
+
+```
+
+```{r load-raw, echo=FALSE, message=FALSE, warning=FALSE}
+library(readxl)
+data_path <- "data/Global Terrorism Index 2023.xlsx"
+
+raw_df <- read_excel(data_path, sheet = "Combined raw")
+#head(raw_df)
+```
+
+```{r clean-raw, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(janitor)
+library(stringr)
+
+clean_df <- raw_df %>%
+  clean_names() %>%                                 # snake_case column names
+  filter(
+    !is.na(country),
+    country != "",
+    !str_detect(country, regex("total|all", ignore_case = TRUE))
+  ) %>%
+  mutate(
+    country    = str_squish(country),               # trim extra spaces
+    year       = as.integer(year),
+    incidents  = as.numeric(incidents),
+    fatalities = as.numeric(fatalities),
+    injuries   = as.numeric(injuries),
+    hostages   = as.numeric(hostages),
+    score      = as.numeric(score)
+  ) %>%
+  replace_na(list(                                  # missing counts → 0
+    incidents  = 0,
+    fatalities = 0,
+    injuries   = 0,
+    hostages   = 0
+  )) %>%
+  distinct(country, year, .keep_all = TRUE)         # drop exact duplicates
+
+#head(clean_df)
+```
+
+```{r validate-cleaning, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+
+# 1. Compare dimensions before & after
+#cat("Raw rows:", nrow(raw_df), "→ Clean rows:", nrow(clean_df), "\n")
+#cat("Raw cols:", ncol(raw_df), "→ Clean cols:", ncol(clean_df), "\n\n")
+
+# 2. Check for any duplicate rows remaining
+#cat("Duplicates in clean_df:", sum(duplicated(clean_df)), "\n\n")
+
+# 3. Summarize NA counts by column
+na_summary <- clean_df %>%
+  summarise(across(everything(), ~ sum(is.na(.))))
+#print(na_summary)
+
+# 4. Glimpse the cleaned structure
+#glimpse(clean_df)
+```
+
+```{r filter-years, echo=FALSE, message=FALSE, warning=FALSE}
+# 1. Keep only 2012 through 2022
+combined_raw_df <- clean_df %>%
+  filter(year >= 2012, year <= 2022)
+
+# 2. Verify the operation
+#cat("Year range after filter:", range(combined_raw_df$year), "\n")
+#head(combined_raw_df)
+```
+
+```{r select-top8-by-deaths, echo=FALSE, message=FALSE, warning=FALSE}
+top8_countries <- combined_raw_df %>%
+  group_by(country) %>%
+  summarise(total_fatalities = sum(fatalities, na.rm=TRUE), .groups="drop") %>%
+  slice_max(total_fatalities, n=8) %>%
+  pull(country)
+
+filtered_df <- combined_raw_df %>%
+  filter(country %in% top8_countries)
+
+#top8_countries
+```
+
+```{r summarise-annual, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+
+annual_fat_df <- filtered_df %>%
+  group_by(country, year) %>%
+  summarise(
+    annual_fatalities = sum(fatalities, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    fatalities_k = annual_fatalities / 1000
+  )
+
+# Print all 88 rows to verify
+#print(annual_fat_df, n = nrow(annual_fat_df))
+```
+
+```{r interactive-stack-colored-tooltip, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(plotly)
+library(purrr)
+library(tibble)
+
+# 1) Data prep
+df_plot <- filtered_df %>%
+  group_by(country, year) %>%
+  summarise(fatalities_k = sum(fatalities, na.rm = TRUE) / 1000, .groups = "drop")
+
+top_k <- df_plot %>%
+  group_by(year) %>%
+  summarise(global_k = sum(fatalities_k), .groups = "drop")
+
+# 2) Palette & stacking order
+okabe_ito <- c(
+  "Iraq"         = "#E69F00",
+  "Afghanistan"  = "#56B4E9",
+  "Nigeria"      = "#009E73",
+  "Pakistan"     = "#F0E442",
+  "Somalia"      = "#0072B2",
+  "Burkina Faso" = "#D55E00",
+  "Mali"         = "#CC79A7",
+  "Syria"        = "#999999"
+)
+order_levels <- df_plot %>%
+  group_by(country) %>%
+  summarise(total = sum(fatalities_k), .groups = "drop") %>%
+  arrange(total) %>%
+  pull(country)
+
+# 3) Initialize plotly
+p <- plot_ly()
+
+# 4) Vertical dotted guides for each year
+for (xv in 2012:2022) {
+  p <- p %>% add_segments(
+    x = xv, xend = xv,
+    y = 0, yend = max(top_k$global_k) * 1.2,
+    line = list(dash = "dot", color = "gray80", width = 0.5),
+    showlegend = FALSE, hoverinfo = "none"
+  )
+}
+
+# 5) Stacked areas (no individual hover)
+for (ctry in rev(order_levels)) {
+  sub <- filter(df_plot, country == ctry)
+  p <- p %>% add_trace(
+    x = sub$year,
+    y = sub$fatalities_k,
+    name = ctry,
+    type = "scatter",
+    mode = "none",
+    stackgroup = "one",
+    fillcolor = okabe_ito[ctry],
+    hoverinfo = "none"
+  )
+}
+
+# 6) Global total line — hover turned off here
+p <- p %>% add_trace(
+  data      = top_k,
+  x         = ~year,
+  y         = ~global_k,
+  name      = "Global total",
+  type      = "scatter",
+  mode      = "lines",
+  line      = list(color = "black", width = 2),
+  hoverinfo = "none"    # <- disable its own popup
+)
+
+# 7) Consolidated tooltip at each year
+tooltip_df <- top_k %>%
+  mutate(
+    tooltip = map_chr(year, function(y) {
+      rows <- filter(df_plot, year == y)
+      # build lines: Year + Global + each country
+      hdr  <- paste0("Year: ", y, "<br>Global total: ", round(global_k[year==y],2), " k deaths")
+      cntr <- map_chr(order_levels, function(ct) {
+        val <- rows$fatalities_k[rows$country == ct]
+        sprintf("<span style='color:%s'>&#9632;</span> %s: %.2f k deaths", 
+                okabe_ito[ct], ct, val)
+      })
+      paste(c(hdr, cntr), collapse = "<br>")
+    })
+  )
+
+p <- p %>% add_trace(
+  data       = tooltip_df,
+  x          = ~year,
+  y          = max(top_k$global_k) * 1.2,  # above the stack
+  type       = "scatter",
+  mode       = "markers",
+  marker     = list(size = 0),
+  hoverinfo  = "text",
+  text       = ~tooltip,
+  hoverlabel = list(align = "left", font = list(size = 10)),
+  showlegend = FALSE
+)
+
+# 8) Final layout
+p %>% layout(
+  title     = list(text = "Top 8 Countries: Terrorism Fatalities (2012–2022)", x = 0.5),
+  xaxis     = list(title = "Year", tickmode = "array", tickvals = 2012:2022),
+  yaxis     = list(title = "Fatalities (thousands)", range = c(0, max(top_k$global_k)*1.25)),
+  legend    = list(orientation = "h", x = 0.1, y = -0.2),
+  margin    = list(b = 80),
+  hovermode = "x unified"
+)
+```

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Terrorism Index Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Global Terrorism Index Analysis</h1>
+        <p>Understanding the trends and impacts of terrorism worldwide.</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#trends">Trends</a></li>
+            <li><a href="#impact">Impact</a></li>
+            <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>The Global Terrorism Index (GTI) measures the impact of terrorism on countries around the world.</p>
+        </section>
+
+        <section id="trends">
+            <h2>Trends</h2>
+            <div class="chart-container">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </section>
+
+        <section id="impact">
+            <h2>Impact</h2>
+            <p>The impact of terrorism varies significantly across regions and countries.</p>
+            <div class="impact-cards">
+                <div class="card">
+                    <h3>Region A</h3>
+                    <p>Details about the impact in Region A.</p>
+                </div>
+                <div class="card">
+                    <h3>Region B</h3>
+                    <p>Details about the impact in Region B.</p>
+                </div>
+                <div class="card">
+                    <h3>Region C</h3>
+                    <p>Details about the impact in Region C.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>Summarizing the findings and implications of the Global Terrorism Index.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Global Terrorism Index Analysis</p>
+    </footer>
+</body>
+</html>
