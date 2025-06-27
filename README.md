@@ -20,3 +20,5 @@ to the Global Terrorism Index (2021)"/>
 
 ## Dataset We are Using
 > SourceUrl: https://www.kaggle.com/datasets/ddosad/global-terrorism-index-2023
+>  
+> ![image](https://github.com/user-attachments/assets/bf1b3918-ae62-479f-b839-5aabd0c3a416)
