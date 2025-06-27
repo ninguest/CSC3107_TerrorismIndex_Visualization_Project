@@ -568,41 +568,52 @@ print(annual_fat_df, n = nrow(annual_fat_df))
 **Visualizing Annual Fatalities:** A stacked‐area chart showing total yearly fatalities (in thousands) for our top 8 countries over 2012–2022.
 :::
 
-```{r plot-with-black-line, echo=FALSE, fig.cap="Top 8 Countries: Terrorism Fatalities (2012–2022) with Guide in Caption"}
+```{r plot-isis-with-2020-rebound-fixed, echo=FALSE, fig.cap="Top 8 Countries: Terrorism Fatalities (2012–2022) – ISIS Surge & Decline plus 2020 Rebound (Fixed)"}
 library(dplyr)
 library(ggplot2)
 library(scales)
 library(tibble)
+library(grid)
 
 # 1) Data prep
 df <- filtered_df %>%
   group_by(country, year) %>%
-  summarise(fatalities_k = sum(fatalities, na.rm=TRUE)/1000, .groups="drop")
+  summarise(fatalities_k = sum(fatalities, na.rm = TRUE) / 1000, .groups = "drop")
 
-# 2) Order countries so the largest‐total sits at the bottom of the stack
+# 2) Stack ordering
 order_levels <- df %>%
   group_by(country) %>%
-  summarise(total = sum(fatalities_k), .groups="drop") %>%
+  summarise(total = sum(fatalities_k), .groups = "drop") %>%
   arrange(total) %>%
   pull(country)
 df$country <- factor(df$country, levels = order_levels)
 
-# 3) Compute the annual global totals (for the black line)
+# 3) Compute global totals
 top_k <- df %>%
   group_by(year) %>%
-  summarise(global_k = sum(fatalities_k), .groups="drop")
+  summarise(global_k = sum(fatalities_k), .groups = "drop")
 
-# 4) Define key events (ypos slightly above the stack)
+# 4) Anchor annotation data (2013, 2016 & 2019)
+annot_years <- top_k %>%
+  filter(year %in% c(2013, 2016, 2019)) %>%
+  mutate(label = case_when(
+    year == 2013 ~ paste0("Peak: ", round(global_k, 1), " k"),
+    TRUE         ~ paste0(round(global_k, 1), " k")
+  ))
+
+# 5) Compute 2020 rebound values
+y2020   <- top_k$global_k[top_k$year == 2020]
+label20 <- paste0(round(y2020, 1), " k")
+
+# 6) Key events for vlines & labels
 events <- tribble(
-  ~year,  ~date,         ~label,                         ~ypos,
-  2013,   "21 Aug 2013", "Ghouta chemical attack",       top_k$global_k[top_k$year==2013] + 1.5,
-  2014,   "29 Jun 2014", "ISIS caliphate declared",      top_k$global_k[top_k$year==2014] + 3.5,
-  2016,   "17 Oct 2016", "Battle of Mosul begins",       top_k$global_k[top_k$year==2016] + 1.5,
-  2019,   "27 Oct 2019", "Baghdadi killed by US forces", top_k$global_k[top_k$year==2019] + 2.5,
-  2021,   "15 Aug 2021", "Taliban capture Kabul",         top_k$global_k[top_k$year==2021] + 1.5
+  ~year, ~date,         ~label,                         ~ypos,
+  2013,  "21 Aug 2013",  "Ghouta chemical attack",       top_k$global_k[top_k$year == 2013] + 1.5,
+  2016,  "17 Oct 2016",  "Battle of Mosul begins",       top_k$global_k[top_k$year == 2016] + 1.5,
+  2019,  "27 Oct 2019",  "Baghdadi killed by US forces", top_k$global_k[top_k$year == 2019] + 2.5
 )
 
-# 5) Okabe–Ito color‐blind–safe palette
+# 7) Palette
 okabe_ito <- c(
   "Iraq"         = "#E69F00",
   "Afghanistan"  = "#56B4E9",
@@ -614,16 +625,65 @@ okabe_ito <- c(
   "Syria"        = "#999999"
 )
 
-# 6) Plot
+# 8) Plot
 ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
   # a) stacked areas
   geom_area(color = "white", size = 0.2, alpha = 0.85) +
-  # b) global total
+  # b) global total line
   geom_line(data = top_k,
             aes(x = year, y = global_k, color = "Global total"),
+            inherit.aes = FALSE, size = 1) +
+  # c) red anchors & labels for 2013, 2016 & 2019
+  geom_point(data = annot_years,
+             aes(x = year, y = global_k),
+             inherit.aes = FALSE, color = "red", size = 3) +
+  geom_text(data = annot_years,
+            aes(x = year, y = global_k, label = label),
             inherit.aes = FALSE,
-            size = 1) +
-  # c) events
+            nudge_y = 0.5, fontface = "bold", size = 4, color = "red") +
+  # d) downtrend arrow (2016→2019)
+  geom_segment(data = tibble(),
+               aes(x    = 2016,
+                   y    = top_k$global_k[top_k$year == 2016] + 0.8,
+                   xend = 2019,
+                   yend = top_k$global_k[top_k$year == 2019] + 0.8),
+               inherit.aes = FALSE,
+               arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
+               color = "red", size = 0.8) +
+  annotate("text",
+           x     = 2017.5,
+           y     = approx(top_k$year, top_k$global_k, xout = 2017.5)$y + 1.3,
+           label = "Downtrend",
+           angle = -23,
+           color = "red",
+           fontface = "bold",
+           size = 4,
+           hjust = 0.5) +
+  # e) dashed line at 2020
+  geom_vline(data = tibble(x = 2020),
+             aes(xintercept = x),
+             inherit.aes = FALSE,
+             linetype = "dashed",
+             color = "gray30") +
+  # f) 2020 rebound dot & value
+  geom_point(data = tibble(year = 2020, y = y2020),
+             aes(x = year, y = y),
+             inherit.aes = FALSE,
+             color = "red", size = 3) +
+  geom_text(data = tibble(year = 2020, y = y2020, label = label20),
+            aes(x = year, y = y, label = label),
+            inherit.aes = FALSE,
+            nudge_y = 0.3, fontface = "bold", size = 4, color = "red") +
+  # g) 2020 rebound boxed note
+  geom_label(data = tibble(year = 2020, y = y2020 + 0.9, label = "Affiliate Rebound"),
+             aes(x = year, y = y, label = label),
+             inherit.aes = FALSE,
+             size = 3.5,
+             fontface = "bold",
+             fill = "white",
+             color = "gray20",
+             label.size = 0.05) +
+  # h) event vlines & labels
   geom_vline(data = events,
              aes(xintercept = year),
              inherit.aes = FALSE,
@@ -637,31 +697,25 @@ ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
              fill = "white",
              color = "gray20",
              label.size = 0.05) +
-  # d) fills & legend
+  # i) scales & legend
   scale_fill_manual(name = "Country", values = okabe_ito) +
-  scale_color_manual(
-    name   = NULL,
-    values = c("Global total" = "black"),
-    guide  = guide_legend(override.aes = list(linetype = 1, size = 1.2))
-  ) +
-  # e) axes
+  scale_color_manual(NULL, values = c("Global total" = "black"),
+                     guide = guide_legend(override.aes = list(linetype = 1, size = 1.2))) +
   scale_x_continuous(breaks = 2012:2022) +
-  scale_y_continuous(
-    name   = "Fatalities (thousands)",
-    expand = expansion(mult = c(0.05, 0.15))
-  ) +
-  # f) titles & caption
+  scale_y_continuous("Fatalities (thousands)", expand = expansion(mult = c(0.05,0.15))) +
+  # j) labels & caption
   labs(
     title    = "Top 8 Countries: Terrorism Fatalities (2012–2022)",
-    subtitle = "Key events annotated with dates",
+    subtitle = "Peak in 2013 followed by Mosul turning point, Baghdadi’s death and Affiliate Rebound",
     caption  = paste(
       "Note: colored layers = fatalities by country;",
       "black line = total global fatalities;",
-      "dashed lines & labels = key events."
+      "red dots & labels = anchor totals;",
+      "arrow & text = downtrend 2016–2019;"
     ),
     x = "Year"
   ) +
-  # g) theming
+  # k) theme
   theme_minimal(base_size = 14) +
   theme(
     plot.title            = element_text(hjust = 0.5, face = "bold", size = 16),
