@@ -588,24 +588,25 @@ order_levels <- df %>%
   pull(country)
 df$country <- factor(df$country, levels = order_levels)
 
-# 3) Compute global totals
+# 3) Global totals
 top_k <- df %>%
   group_by(year) %>%
   summarise(global_k = sum(fatalities_k), .groups = "drop")
 
-# 4) Anchor annotation data (2013, 2016 & 2019)
+# 4) Anchor labels for 2013, 2016, 2019
 annot_years <- top_k %>%
   filter(year %in% c(2013, 2016, 2019)) %>%
-  mutate(label = case_when(
-    year == 2013 ~ paste0("Peak: ", round(global_k, 1), " k"),
-    TRUE         ~ paste0(round(global_k, 1), " k")
+  mutate(label = if_else(
+    year == 2013,
+    paste0("Peak: ", round(global_k, 1), " k"),
+    paste0(round(global_k, 1), " k")
   ))
 
-# 5) Compute 2020 rebound values
+# 5) 2020 rebound values
 y2020   <- top_k$global_k[top_k$year == 2020]
 label20 <- paste0(round(y2020, 1), " k")
 
-# 6) Key events for vlines & labels
+# 6) Key events
 events <- tribble(
   ~year, ~date,         ~label,                         ~ypos,
   2013,  "21 Aug 2013",  "Ghouta chemical attack",       top_k$global_k[top_k$year == 2013] + 1.5,
@@ -629,11 +630,14 @@ okabe_ito <- c(
 ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
   # a) stacked areas
   geom_area(color = "white", size = 0.2, alpha = 0.85) +
-  # b) global total line
+  
+  # b) global total line (inherit.aes=FALSE so it won't try to map fill=country)
   geom_line(data = top_k,
             aes(x = year, y = global_k, color = "Global total"),
-            inherit.aes = FALSE, size = 1) +
-  # c) red anchors & labels for 2013, 2016 & 2019
+            inherit.aes = FALSE,
+            size = 1) +
+  
+  # c) anchor points and labels
   geom_point(data = annot_years,
              aes(x = year, y = global_k),
              inherit.aes = FALSE, color = "red", size = 3) +
@@ -641,7 +645,8 @@ ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
             aes(x = year, y = global_k, label = label),
             inherit.aes = FALSE,
             nudge_y = 0.5, fontface = "bold", size = 4, color = "red") +
-  # d) downtrend arrow (2016→2019)
+  
+  # d) downtrend arrow
   geom_segment(data = tibble(),
                aes(x    = 2016,
                    y    = top_k$global_k[top_k$year == 2016] + 0.8,
@@ -655,75 +660,62 @@ ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
            y     = approx(top_k$year, top_k$global_k, xout = 2017.5)$y + 1.3,
            label = "Downtrend",
            angle = -23,
-           color = "red",
-           fontface = "bold",
-           size = 4,
-           hjust = 0.5) +
-  # e) dashed line at 2020 -- inherit.aes removed
-  geom_vline(data = tibble(x = 2020),
-             aes(xintercept = x),
-             linetype = "dashed",
-             color = "gray30") +
-  # f) 2020 rebound dot & value
+           fontface = "bold", size = 4, color = "red", hjust = 0.5) +
+  
+  # e) 2020 rebound vertical
+  geom_vline(xintercept = 2020, linetype = "dashed", color = "gray30") +
+  
+  # f) 2020 rebound point, value, and label (each with its own one-row data)
   geom_point(data = tibble(year = 2020, y = y2020),
              aes(x = year, y = y),
-             inherit.aes = FALSE,
-             color = "red", size = 3) +
+             inherit.aes = FALSE, color = "red", size = 3) +
   geom_text(data = tibble(year = 2020, y = y2020, label = label20),
             aes(x = year, y = y, label = label),
             inherit.aes = FALSE,
             nudge_y = 0.3, fontface = "bold", size = 4, color = "red") +
-  # g) 2020 rebound boxed note
   geom_label(data = tibble(year = 2020, y = y2020 + 0.9, label = "Affiliate Rebound"),
              aes(x = year, y = y, label = label),
              inherit.aes = FALSE,
-             size = 3.5,
-             fontface = "bold",
-             fill = "white",
-             color = "gray20",
-             label.size = 0.05) +
-  # h) event vlines & labels -- inherit.aes removed
+             size = 3.5, fontface = "bold",
+             fill = "white", color = "gray20", label.size = 0.05) +
+  
+  # g) event vlines and labels
   geom_vline(data = events,
              aes(xintercept = year),
-             linetype = "dashed",
-             color = "gray30") +
+             linetype = "dashed", color = "gray30") +
   geom_label(data = events,
              aes(x = year, y = ypos, label = paste0(label, "\n", date)),
              inherit.aes = FALSE,
-             size = 4,
-             fontface = "bold",
-             fill = "white",
-             color = "gray20",
-             label.size = 0.05) +
-  # i) scales & legend
+             size = 4, fontface = "bold",
+             fill = "white", color = "gray20", label.size = 0.05) +
+  
+  # h) scales & legend
   scale_fill_manual(name = "Country", values = okabe_ito) +
-  scale_color_manual(NULL, values = c("Global total" = "black"),
+  scale_color_manual(NULL,
+                     values = c("Global total" = "black"),
                      guide = guide_legend(override.aes = list(linetype = 1, size = 1.2))) +
   scale_x_continuous(breaks = 2012:2022) +
-  scale_y_continuous("Fatalities (thousands)", expand = expansion(mult = c(0.05,0.15))) +
-  # j) labels & caption
+  scale_y_continuous("Fatalities (thousands)",
+                     expand = expansion(mult = c(0.05, 0.15))) +
+  
+  # i) titles, subtitle, source
   labs(
-    title    = "Top 8 Countries: Terrorism Fatalities (2012–2022)",
-    subtitle = "Peak in 2013 followed by Mosul turning point, Baghdadi’s death and Affiliate Rebound",
-    caption  = paste(
-      "Note: colored layers = fatalities by country;",
-      "black line = total global fatalities;",
-      "red dots & labels = anchor totals;",
-      "arrow & text = downtrend 2016–2019;"
-    ),
-    x = "Year"
+    title    = "Global Terrorism Fatalities in the Highest-Impact Countries (2012–2022)",
+    subtitle = "Cumulative deaths peaked in 2013; a pronounced decline followed the Battle of Mosul and ISIS leadership loss, with a modest rebound in 2020",
+    caption  = "Source: Kaggle (Kaggle, 2023): Global Terrorism Index 2023 (2012–2022)",
+    x        = "Year"
   ) +
-  # k) theme
+  
+  # j) theme
   theme_minimal(base_size = 14) +
   theme(
     plot.title            = element_text(hjust = 0.5, face = "bold", size = 16),
     plot.subtitle         = element_text(hjust = 0.5, size = 12),
-    plot.caption          = element_text(hjust = 0, face = "italic", size = 10),
     plot.caption.position = "plot",
+    plot.caption          = element_text(hjust = 1, face = "italic", size = 10),
     legend.position       = "bottom",
     panel.grid.minor      = element_blank()
   )
-
 ```
 
 ::: insight-box
