@@ -1,7 +1,7 @@
 ---
 title: "Global Terrorism Index Analysis (2012-2022)"
 subtitle: "Exploring Patterns and Trends in Terrorism Impact"
-author: "`Tee Yu Cheng`"
+author: "`Team Coral`"
 format: 
   html:
     theme: cosmo
@@ -659,10 +659,9 @@ ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
            fontface = "bold",
            size = 4,
            hjust = 0.5) +
-  # e) dashed line at 2020
+  # e) dashed line at 2020 -- inherit.aes removed
   geom_vline(data = tibble(x = 2020),
              aes(xintercept = x),
-             inherit.aes = FALSE,
              linetype = "dashed",
              color = "gray30") +
   # f) 2020 rebound dot & value
@@ -683,10 +682,9 @@ ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
              fill = "white",
              color = "gray20",
              label.size = 0.05) +
-  # h) event vlines & labels
+  # h) event vlines & labels -- inherit.aes removed
   geom_vline(data = events,
              aes(xintercept = year),
-             inherit.aes = FALSE,
              linetype = "dashed",
              color = "gray30") +
   geom_label(data = events,
@@ -725,6 +723,7 @@ ggplot(df, aes(x = year, y = fatalities_k, fill = country)) +
     legend.position       = "bottom",
     panel.grid.minor      = element_blank()
   )
+
 ```
 
 ::: insight-box
