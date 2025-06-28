@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Terrorism Index (2012–2022)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f6f9fc 0%, #eef2f5 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+    header {
+      background: #0a3d62;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      animation: fadeIn 2s ease-out;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    section {
+      padding: 3rem 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: #0a3d62;
+      margin-top: 0;
+    }
+    .insight {
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 5px;
+    }
+    .chart-image {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .chart-image:hover {
+      transform: scale(1.02);
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: #0a3d62;
+      color: white;
+      font-size: 0.9rem;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 600px) {
+      section {
+        padding: 1.2rem 0.5rem;
+      }
+      header {
+        padding: 1.2rem 0.5rem;
+      }
+      h2 {
+        font-size: 1.2rem;
+      }
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .chart-image {
+        border-radius: 4px;
+      }
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.2s;
+    }
+    .modal.open { display: flex; }
+    .modal img {
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 8px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+      cursor: zoom-in;
+    }
+    .modal .close-btn {
+      position: absolute;
+      top: 1.5rem; right: 2rem;
+      font-size: 2rem;
+      color: #fff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+    @media (max-width: 600px) {
+      .modal img { max-width: 98vw; max-height: 70vh; }
+      .modal .close-btn { top: 0.5rem; right: 1rem; font-size: 1.5rem; }
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .highlight-box {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .highlight-box h3 {
+      color: #0a3d62;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Global Terrorism Index Analysis (2012–2022)</h1>
+    <p>Explore how terrorism has impacted countries across the globe over the past decade</p>
+  </header>
+
+  <section>
+    <h2>Overview</h2>
+    <p>The Global Terrorism Index (GTI) measures the impact of terrorism across countries by analyzing incidents, fatalities, injuries, and hostage situations. This site highlights key insights and trends from 2012 to 2022.</p>
+    
+    <div class="grid-container">
+      <div class="highlight-box">
+        <h3>Key Findings</h3>
+        <ul>
+          <li>Terrorism impact is highly concentrated in Middle East, South Asia, and parts of Africa</li>
+          <li>Global peak in terrorism impact occurred around 2013-2016</li>
+          <li>Different countries show distinct patterns of improvement or deterioration</li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <h3>Most Affected Countries</h3>
+        <ul>
+          <li>Afghanistan: Consistently highest GTI score</li>
+          <li>Iraq: Significant decline since 2014-2015 peak</li>
+          <li>Nigeria: High hostage cases due to specific tactics</li>
+          <li>Burkina Faso & Mali: Emerging hotspots</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Top Impacted Countries</h2>
+    <img src="overall_files/figure-html/overall-trend-1.png" alt="GTI Scores Trend" class="chart-image">
+    <div class="insight">
+      <strong>Insights:</strong>
+      <ul>
+        <li>Afghanistan consistently had the highest GTI score throughout most of the period.</li>
+        <li>Iraq shows a significant decline in terrorism impact since its peak around 2014-2015.</li>
+        <li>Several countries show recent increases in their GTI scores, suggesting emerging terrorism hotspots.</li>
+        <li>The overall pattern reveals fluctuating impacts, indicating the dynamic nature of terrorism threats globally.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Severity by Country</h2>
+    <img src="overall_files/figure-html/country-severity-1.png" alt="Severity Trends" class="chart-image">
+    <div class="insight">
+      <strong>Insights:</strong>
+      <ul>
+        <li>Most countries have experienced periods in the "High" to "Severe" range during the decade.</li>
+        <li>Some countries show clear improvement patterns (Iraq, Syria, Nigeria).</li>
+        <li>Others demonstrate concerning upward trends (Burkina Faso, Mali).</li>
+        <li>Afghanistan has remained consistently in the "Severe" category.</li>
+        <li>The severity classification provides important context for understanding the relative impact of terrorism.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fatalities, Injuries & Incidents</h2>
+    <img src="overall_files/figure-html/fatalities-1.png" alt="Fatalities" class="chart-image">
+    <img src="overall_files/figure-html/injuries-1.png" alt="Injuries" class="chart-image">
+    <img src="overall_files/figure-html/incidents-1.png" alt="Incidents" class="chart-image">
+    <div class="insight">
+      <strong>Highlights:</strong>
+      <ul>
+        <li>Iraq, Afghanistan, and Nigeria have suffered the highest number of terrorism-related deaths.</li>
+        <li>Iraq and Afghanistan also lead in injuries, but Pakistan ranks higher in injuries than in fatalities.</li>
+        <li>Iraq experiences the most terrorism incidents, followed by Afghanistan and Pakistan.</li>
+        <li>Different countries show different patterns of terrorism impact (e.g., some have high fatality-to-incident ratios while others show more incidents with fewer casualties).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hostage Situations</h2>
+    <img src="overall_files/figure-html/hostages-1.png" alt="Hostages" class="chart-image">
+    <div class="insight">
+      <strong>Key Insights:</strong>
+      <ul>
+        <li>Nigeria stands out with significantly more hostages than other countries, likely due to specific tactics used by terrorist groups operating there.</li>
+        <li>Afghanistan, Iraq, and Syria also show high numbers of hostage situations.</li>
+        <li>Hostage situations follow a different pattern than fatalities and injuries, with distinct peaks.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Global Trends Over Time</h2>
+    <img src="overall_files/figure-html/global-trends-1.png" alt="Global Trends" class="chart-image">
+    <div class="insight">
+      <strong>Key Global Trends:</strong>
+      <ul>
+        <li>The period around 2014-2015 shows a significant peak in both fatalities and injuries, corresponding to the rise of ISIS.</li>
+        <li>Since 2015, there has been a general downward trend in all three impact measures.</li>
+        <li>Recent years show some stabilization at lower levels compared to the mid-decade peak.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Annual Fatalities Analysis</h2>
+    <img src="overall_files/figure-html/plot-isis-with-2020-rebound-fixed-1.png" alt="Annual Fatalities" class="chart-image">
+    <div class="insight">
+      <strong>Key Insights from Annual Fatalities (2012–2022):</strong>
+      <ul>
+        <li><strong>Global Peak & Major Surges: </strong><br>Total terrorism deaths hit their highest point around 2013, driven largely by ISIS’s rise (declared caliphate in June 2014) and the Ghouta chemical attack (Aug 2013). A secondary surge in 2016 coincides with the Battle of Mosul.</li><br>
+        <li><strong>Steady Decline Post-2016: </strong><br>After Mosul, overall fatalities fell sharply through 2017–2019, culminating in the killing of ISIS leader Baghdadi in October 2019.</li><br>
+        <li><strong>Uptick & Shifts: </strong><br> From 2020 onward fatalities stabilized at lower levels, with a mild rebound in 2021 as the Taliban recaptured Kabul.</li><br>
+        <li><strong>Country Contributions</strong><br> Iraq and Nigeria remain the largest contributors throughout, followed by Afghanistan and Somalia, while the Sahel states (Burkina Faso, Mali) gradually account for a bigger share in later years.</li><br>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Tee Yu Cheng · Global Terrorism Index Visual Storytelling
+  </footer>
+
+  <!-- Modal Structure: KEEP ONLY THIS ONE -->
+  <div id="imgModal" class="modal">
+    <button class="close-btn" aria-label="Close">&times;</button>
+    <img id="modalImg" src="" alt="Zoomed chart" />
+  </div>
+
+  <script>
+    // Open modal on image click
+    document.querySelectorAll('.chart-image').forEach(img => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', function() {
+        document.getElementById('modalImg').src = this.src;
+        document.getElementById('imgModal').classList.add('open');
+        document.getElementById('modalImg').style.transform = 'scale(1)';
+      });
+    });
+
+    // Close modal when clicking close button
+    document.querySelector('#imgModal .close-btn').onclick = function() {
+      document.getElementById('imgModal').classList.remove('open');
+    };
+
+    // Close modal when clicking outside the image
+    document.getElementById('imgModal').onclick = function(e) {
+      if (e.target === this) this.classList.remove('open');
+    };
+
+    // Zoom in/out on tap/click
+    let zoomed = false;
+    document.getElementById('modalImg').onclick = function(e) {
+      e.stopPropagation();
+      zoomed = !zoomed;
+      this.style.transform = zoomed ? 'scale(2)' : 'scale(1)';
+      this.style.cursor = zoomed ? 'zoom-out' : 'zoom-in';
+    };
+  </script>
+</body>
+</html>
