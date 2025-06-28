@@ -120,7 +120,8 @@ info_vis_2025_terrorism_index_poster/
 > ![shxclone's Commits](https://github.com/user-attachments/assets/89cccee7-e109-4062-bed0-3265d87e4295)
 
 
-> **Note:** Only the four members above contributed to this project. The remaining listed members did not participate in any part of the work.
+> **Note:** Only the four members above contributed to this project. The remaining listed members did not participate in any part of the work.  
+>  
 > Telegram Chat (Evidence):  
 > <a href="https://ninguest.github.io/CSC3107_TerrorismIndex_Visualization_Project/chat/messages.html" target="_blank">https://ninguest.github.io/CSC3107_TerrorismIndex_Visualization_Project/chat/messages.html</a>
 >  
