@@ -1,4 +1,4 @@
-# CSC3107_TerrorismIndex_Visualization_Project
+# CSC3107_TerrorismIndex_Visualization_Project [Completed]
 
 [![GitHub Pages](https://img.shields.io/badge/View%20Webpage-Live%20Demo-2ea44f?logo=github)](https://ninguest.github.io/CSC3107_TerrorismIndex_Visualization_Project/)
 [![GitHub Repo stars](https://img.shields.io/github/stars/ninguest/CSC3107_TerrorismIndex_Visualization_Project?style=social)](https://github.com/ninguest/CSC3107_TerrorismIndex_Visualization_Project)
