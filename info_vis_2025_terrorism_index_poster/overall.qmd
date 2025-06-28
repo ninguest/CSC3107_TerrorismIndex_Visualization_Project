@@ -3,13 +3,13 @@ title:    "Global Terrorism Index Analysis (2012–2022)"
 subtitle: "Exploring Patterns and Trends in Terrorism Impact"
 author:
   - name: "**Team Coral**"
-  - name: "Tee Yu Cheng (2300884)"
-  - name: "Lim Jing Chuan Jonathan (2300923)"
-  - name: "Miko Lim Yu Hui (2301126)"
-  - name: "Ong Jia En Darryl (2301402)"
-  - name: "Lim Liang Fan (2300937)"
-  - name: "Toh Zheng Yan (2300898)"
-  - name: "Huang Wan Ying (2301113)"
+  - name: "`Tee Yu Cheng` (2300884)"
+  - name: "`Lim Jing Chuan Jonathan` (2300923)"
+  - name: "`Miko Lim Yu Hui` (2301126)"
+  - name: "`Ong Jia En Darryl` (2301402)"
+  - name: "`Lim Liang Fan` (2300937)"
+  - name: "`Toh Zheng Yan` (2300898)"
+  - name: "`Huang Wan Ying` (2301113)"
 format:
   html:
     theme:          cosmo
@@ -869,3 +869,35 @@ p %>% layout(
   hovermode = "x unified"
 )
 ```
+
+# 7. References {.section-header}
+
+::: description-box
+**References**
+
+-   AP News. (2017, December 21). Freedom from IS in Mosul costs lives of 9,000-plus civilians. https://www.apnews.com/article/6d94ba30348e4a25bf76e031b0212ef9
+
+-   CBS News. (2017, December 20). AP says Mosul ISIS battle civilian death toll 10-times higher than US, Iraq acknowledge. https://www.cbsnews.com/news/ap-mosul-isis-civilian-death-toll-10-times-higher-us-iraq-acknowledge/
+
+-   CNN. (2016, December 2). Mosul battle: Mounting death toll, urban warfare slow. https://www.cnn.com/2016/12/02/middleeast/iraq-mosul-battle-isis/index.html
+
+-   CNN. (2016, December 3). Iraq disputes number killed in battle against ISIS. https://edition.cnn.com/2016/12/03/middleeast/iraq-mosul-battle-deaths/
+
+-   Healy, K. (2018). Data visualization: A practical introduction. Princeton University Press.
+
+-   Human Rights Watch. (2013, September 10). Attacks on Ghouta: Analysis of alleged use of chemical weapons in Syria. https://www.hrw.org/report/2013/09/10/attacks-ghouta/analysis-alleged-use-chemical-weapons-syria
+
+-   Institute for Economics and Peace. (2023). Global Terrorism Index 2023: Measuring the impact of terrorism. https://www.economicsandpeace.org/global-terrorism-index/
+
+-   R Core Team. (2023). R: A language and environment for statistical computing. R Foundation for Statistical Computing. https://www.R-project.org/
+
+-   ReliefWeb. (n.d.). Mosul report 17Oct2016-10Jul2017, FINAL as of 30 October 2017. https://reliefweb.int/attachments/1319cb61-4d76-3cfa-bfd8-c075e91d0801/Mosul_report%2017Oct2016-10Jul201731%20October_2017.pdf
+
+-   Telegrafi. (2016). Training of Russia's anti-terrorist troops - like a real event (Video). https://telegrafi.com/en/the-training-of-the-anti-terrorist-troops-of-russias-as-a-real-video-event/
+
+-   U.S. Department of Defense. (2019, October 27). U.S. forces kill ISIS founder, leader Baghdadi in Syria. https://www.defense.gov/news/news-stories/article/1999751/us-forces-kill-isis-founder-leader-baghdadi-in-syria/
+
+-   Vox. (2017, December 20). The US spent months battling ISIS in Mosul. At least 9,000 civilians died. https://www.vox.com/world/2017/12/20/16800510/mosul-death-toll-isis-trump-war
+
+-   Wickham, H., & Grolemund, G. (2017). R for data science: Import, tidy, transform, visualize, and model data. O’Reilly Media.
+:::
