@@ -1,17 +1,25 @@
 ---
-title: "Global Terrorism Index Analysis (2012-2022)"
+title:    "Global Terrorism Index Analysis (2012–2022)"
 subtitle: "Exploring Patterns and Trends in Terrorism Impact"
-author: "`Team Coral`"
-format: 
+author:
+  - name: "**Team Coral**"
+  - name: "Tee Yu Cheng (2300884)"
+  - name: "Lim Jing Chuan Jonathan (2300923)"
+  - name: "Miko Lim Yu Hui (2301126)"
+  - name: "Ong Jia En Darryl (2301402)"
+  - name: "Lim Liang Fan (2300937)"
+  - name: "Toh Zheng Yan (2300898)"
+  - name: "Huang Wang Ying (2301113)"
+format:
   html:
-    theme: cosmo
-    toc: true
-    toc-depth: 3
-    toc-title: "Contents"
-    code-fold: true
-    code-tools: true
-    fig-width: 12
-    fig-height: 8
+    theme:          cosmo
+    toc:            true
+    toc-depth:      3
+    toc-title:      "Contents"
+    code-fold:      true
+    code-tools:     true
+    fig-width:      12
+    fig-height:     8
     highlight-style: github
 editor: visual
 ---
@@ -556,9 +564,9 @@ print(annual_fat_df, n = nrow(annual_fat_df))
 ::: insight-box
 **Fatality Rate Calculation:**\
 • Groups the top-8 countries by `country` and `year`.\
-• Sums `total_fatalities` and `total_incidents`.\
+• Sums `fatalities` into `annual_fatalities` (with `na.rm = TRUE`).\
 • Drops years with zero incidents to avoid undefined rates.\
-• Computes `fatality_rate = total_fatalities / total_incidents`.\
+• Converts to thousands `fatalities_k = annual_fatalities / 1000`.\
 • Prints all 88 rows (2012–2022) so you can verify every country–year rate before plotting.
 :::
 
@@ -568,7 +576,7 @@ print(annual_fat_df, n = nrow(annual_fat_df))
 **Visualizing Annual Fatalities:** A stacked‐area chart showing total yearly fatalities (in thousands) for our top 8 countries over 2012–2022.
 :::
 
-```{r plot-isis-with-2020-rebound-fixed, echo=FALSE, fig.cap="Top 8 Countries: Terrorism Fatalities (2012–2022) – ISIS Surge & Decline plus 2020 Rebound (Fixed)"}
+```{r plot-isis-with-2020-rebound-fixed, echo=TRUE, fig.cap="Top 8 Countries: Terrorism Fatalities (2012–2022) – ISIS Surge & Decline plus 2020 Rebound (Fixed)"}
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -748,7 +756,9 @@ This analysis has examined the Global Terrorism Index data from multiple perspec
 
 # 6. Additional Information {.section-header}
 
-```{r interactive-stack-colored-tooltip, echo=FALSE}
+## Interactive Plot
+
+```{r interactive-stack-colored-tooltip, echo=TRUE, message=FALSE, warning=FALSE}
 library(dplyr)
 library(plotly)
 library(purrr)
@@ -860,11 +870,3 @@ p %>% layout(
 )
 ```
 
-```{r}
-htmlwidgets::saveWidget(
-  p,                                     # your plotly object
-  file          = "terror-fatalities-stack.html",
-  selfcontained = TRUE
-)
-
-```
