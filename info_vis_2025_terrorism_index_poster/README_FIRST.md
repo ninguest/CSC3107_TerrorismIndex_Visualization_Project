@@ -121,4 +121,10 @@ info_vis_2025_terrorism_index_poster/
 
 
 > **Note:** Only the four members above contributed to this project. The remaining listed members did not participate in any part of the work.
-> Telegram Chat (Evidence): 
+> Telegram Chat (Evidence): [https://ninguest.github.io/CSC3107_TerrorismIndex_Visualization_Project/chat/messages.html](https://ninguest.github.io/CSC3107_TerrorismIndex_Visualization_Project/chat/messages.html)
+> 宇成 = Tee Yu Cheng
+> Jonathan Lim = Lim Jing Chuan Jonathan
+> miko = Miko Lim Yu Hui
+> Darryl = Ong Jia En Darryl
+> Liang Fan = Lim Liang Fan
+> wanying = Huang Wan Ying
