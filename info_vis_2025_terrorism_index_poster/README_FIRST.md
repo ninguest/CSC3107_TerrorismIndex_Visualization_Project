@@ -114,4 +114,5 @@ info_vis_2025_terrorism_index_poster/
 |:-----------------------------------------:|:--------------------------------------------------------:|:-----------------------------------------------:|:------------------------------------------------:|
 | **Tee Yu Cheng (2300884)**<br>- Data Prep & Cleaning<br>- Plotting Line Charts<br>- Website Development | **Lim Jing Chuan Jonathan (2300923)**<br>- Data Cleaning, Normalization & Filtering<br>- Interactive Map Plot<br>- Poster | **Miko Lim Yu Hui (2301126)**<br>- Data Cleaning, Normalization & Filtering<br>- Interactive Map Plot<br>- Poster | **Ong Jia En Darryl (2301402)**<br>- Data Cleaning, Normalization & Filtering |
 
-> **Note:** Only the four members above contributed to this project. The remaining listed members did not participate in any part of the work.
+> **Note:** Only the four members above contributed to this project. The remaining listed members did not participate in any part of the work. 
+> Telegram Chat (Evidence): 
