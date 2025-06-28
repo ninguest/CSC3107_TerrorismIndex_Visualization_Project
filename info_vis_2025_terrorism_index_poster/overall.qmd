@@ -9,7 +9,7 @@ author:
   - name: "Ong Jia En Darryl (2301402)"
   - name: "Lim Liang Fan (2300937)"
   - name: "Toh Zheng Yan (2300898)"
-  - name: "Huang Wang Ying (2301113)"
+  - name: "Huang Wan Ying (2301113)"
 format:
   html:
     theme:          cosmo
@@ -869,4 +869,3 @@ p %>% layout(
   hovermode = "x unified"
 )
 ```
-
