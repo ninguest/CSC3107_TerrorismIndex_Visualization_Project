@@ -1,9 +1,5 @@
 # Global Terrorism Index Visualization Project
 
-[![View Webpage](https://img.shields.io/badge/View%20Webpage-Live%20Demo-2ea44f?logo=github)](https://ninguest.github.io/CSC3107_TerrorismIndex_Visualization_Project/)
-[![GitHub Issues](https://img.shields.io/github/issues/ninguest/CSC3107_TerrorismIndex_Visualization_Project)](https://github.com/ninguest/CSC3107_TerrorismIndex_Visualization_Project/issues)
-[![Last Commit](https://img.shields.io/github/last-commit/ninguest/CSC3107_TerrorismIndex_Visualization_Project)](https://github.com/ninguest/CSC3107_TerrorismIndex_Visualization_Project/commits/main)
-
 ## Overview
 
 This project analyzes and visualizes data from the Global Terrorism Index (GTI) for the years 2012–2022. It aims to provide insights into terrorism trends, country-level impacts, and key patterns using interactive and static visualizations.
@@ -110,8 +106,18 @@ info_vis_2025_terrorism_index_poster/
 
 ### Github Commits
 
-| ![Tee Yu Cheng](contributions/9guest.png) | ![Lim Jing Chuan Jonathan](contributions/jonathanljc.png) | ![Miko Lim Yu Hui](contributions/mikolim19.png) | ![Ong Jia En Darryl](contributions/shxclone.png) |
-|:-----------------------------------------:|:--------------------------------------------------------:|:-----------------------------------------------:|:------------------------------------------------:|
-| **Tee Yu Cheng (2300884)**<br>- Data Prep & Cleaning<br>- Plotting Line Charts<br>- Website Development | **Lim Jing Chuan Jonathan (2300923)**<br>- Data Cleaning, Normalization & Filtering<br>- Interactive Map Plot<br>- Poster | **Miko Lim Yu Hui (2301126)**<br>- Data Cleaning, Normalization & Filtering<br>- Interactive Map Plot<br>- Poster | **Ong Jia En Darryl (2301402)**<br>- Data Cleaning, Normalization & Filtering |
+#### Tee Yu Cheng
+> ![9guest's Commits](https://github.com/user-attachments/assets/61692bfc-856d-41f1-a369-8cf12ce84cdd)
+> ![ninguest's Commits](https://github.com/user-attachments/assets/e7e32735-bf6d-416d-84f4-53054266bf5d)
+
+#### Lim Jing Chuan Jonathan
+> ![jonathanljc's Commits](https://github.com/user-attachments/assets/ffb55407-f48c-443d-889f-173fc319f21f)
+
+#### Miko Lim Yu Hui
+> ![mikolim19's Commits](https://github.com/user-attachments/assets/98a5a079-1b4e-4c28-bdf8-68de79db72d0)
+
+#### Ong Jia En Darryl
+> ![shxclone's Commits](https://github.com/user-attachments/assets/89cccee7-e109-4062-bed0-3265d87e4295)
+
 
 > **Note:** Only the four members above contributed to this project. The remaining listed members did not participate in any part of the work.
